@@ -12,5 +12,20 @@ module.exports = {
       },
     },
     "gatsby-plugin-react-helmet",
+       {
+      resolve: `gatsby-plugin-alias-imports`,
+      options: {
+        alias: {
+          "@src": "src",
+          "@components": "src/components",
+          "@styles": "src/styles",
+          "@pages": "src/pages",
+          "@fonts": "src/fonts",
+        },
+        extensions: [
+          "js",
+        ],
+      }
+    }
   ],
 };
