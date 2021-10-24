@@ -1,67 +1,17 @@
 import React from "react";
-import { ResponsiveNeoGraph } from '@components';
-import styled from 'styled-components';
-import { ThemeProvider } from 'styled-components';
-import { GlobalStyleNetworkVis, theme } from '@styles';
-
-
-const StyledForm = styled.div`
-  ${({ theme }) => theme.mixins.flexCenter};
-  text-align: center;
-  background-color: #000000;
-  color: var(--light-slate);
-  font-family: var(--font-mono);
-  font-size: var(--fz-xxs);
-  line-height: 1;
-  margin: 0px 10px 0px 10px;
-  
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-
-  width: 100%;
-  height: var(--nav-height);
-  background-color: rgba(0, 0, 0, 0.5);
-  filter: none !important;
-  backdrop-filter: blur(10px);
-  transition: var(--transition);
-`;
-
-const StyledSlider = styled.div`
-  ${({ theme }) => theme.mixins.flexCenter};
-  text-align: center;
-  background-color: #000000;
-  color: var(--light-slate);
-  font-family: var(--font-mono);
-  font-size: var(--fz-xxs);
-  line-height: 1;
-  margin: 0px 10px 0px 10px;
-  
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 0;
-
-  width: 100%;
-  height: var(--nav-height);
-  background-color: rgba(0, 0, 0, 0.5);
-  filter: none !important;
-  backdrop-filter: blur(10px);
-  transition: var(--transition);
-`;
+import { ResponsiveNeoGraph, Header, Footer, updateName } from '@components';
 
 class NeoGraphContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {name: 'Krieger N',
+    this.state = {name: this.props.defaultName,
                   weight: '1',
-                  start: '1980',
-                  stop: '2021',
-                  queryName: 'Krieger N',
+                  start: this.props.defaultStart,
+                  stop: this.props.defaultStop,
+                  queryName: this.props.defaultName,
                   queryWeight: '1',
-                  queryStart: '1980',
-                  queryStop: '2021'};
+                  queryStart: this.props.defaultStart,
+                  queryStop: this.props.defaultStop};
 
     this.handleChangeN = this.handleChangeN.bind(this);
     this.handleChangeW = this.handleChangeW.bind(this);
@@ -73,6 +23,7 @@ class NeoGraphContainer extends React.Component {
 
   handleChangeN(event) {
     this.setState({name: event.target.value});
+    updateName(this.props.neo4jUri, this.props.neo4jUser, this.props.neo4jPassword, this.state.name)
   }
 
   handleChangeW(event) {
@@ -97,71 +48,37 @@ class NeoGraphContainer extends React.Component {
 
 
   render() {
-      const containerId = this.props.containerId
-      const neo4jUri = this.props.neo4jUri
-      const neo4jUser = this.props.neo4jUser
-      const neo4jPassword = this.props.neo4jPassword
+
 
     return (
         <>
             <div className="App">
                 <ResponsiveNeoGraph
-                    containerId={containerId}
-                    neo4jUri={neo4jUri}
-                    neo4jUser={neo4jUser}
-                    neo4jPassword={neo4jPassword}
+                    containerId={this.props.containerId}
+                    neo4jUri={this.props.neo4jUri}
+                    neo4jUser={this.props.neo4jUser}
+                    neo4jPassword={this.props.neo4jPassword}
                     searchname={this.state.queryName}
                     collabweight={this.state.queryWeight}
                     startYear = {this.state.queryStart}
-                    stopYear = {this.state.queryStop}/>
+                    stopYear = {this.state.queryStop}
+                    encryptionStatus = {this.props.encryptionStatus}/>
+
             </div>
 
-            <ThemeProvider theme={theme}>
-                <GlobalStyleNetworkVis />
+            <Header
+                name = {this.state.name}
+                weight = {this.state.weight}
+                start = {this.state.start}
+                stop = {this.state.stop}
+                nameChange = {this.handleChangeN}
+                weightChange = {this.handleChangeW}
+                startChange = {this.handleChangeStart}
+                stopChange = {this.handleChangeStop}
+                submit = {this.handleSubmit}
+            />
 
-                <StyledForm>
-                    <form>
-                        the constellations project (led by <a href = 'https://twitter.com/klts0' color = 'blue'><u>@klts0</u></a>)<br/> <br/>
-                        Researcher:  &nbsp; <input type="text" value={this.state.name} onChange={this.handleChangeN} />
-                        &emsp; &emsp;
-
-
-                        Show:  &nbsp; <select  name="weight" id = "weight" value = {this.state.weight} onChange={this.handleChangeW}>
-                                                    <option value="1" selected>1+ Papers</option>
-                                                    <option value="2">2+ Papers</option>
-                                                    <option value="3">3+ Papers</option>
-                                                    <option value="4">4+ Papers</option>
-                                                    <option value="5">5+ Papers</option>
-                                                    <option value="10">10+ Papers</option>
-                                                    <option value="20">20+ Papers</option>
-                                            </select>
-
-                        &emsp; &emsp;
-
-                        From:  &nbsp;<input type="number" size = "4" value = {this.state.start} onChange = {this.handleChangeStart}/>
-                        &emsp; &emsp;
-
-                        To:    &nbsp;<input type="number" size = "4" value = {this.state.stop} onChange = {this.handleChangeStop}/>
-                        &emsp; &emsp;
-
-                        On:  &nbsp; <select  name="on" id = "on">
-                                                    <option value="1" selected>Race/Racism</option>
-                                                    <option value="2">COVID-19 (coming soon)</option>
-                                                    <option value="3">Both (coming soon)</option>
-                                            </select>
-                        &emsp; &emsp; &emsp;
-
-                        <button onClick = {this.handleSubmit}>Lets Go!</button>
-
-
-                    </form>
-                </StyledForm>
-            </ThemeProvider>
-
-            <StyledSlider>
-                this takes a moment to load. take a deep breath and count to 10. go fullscreen. float over and drag nodes, edges, and background. scroll to zoom. not great on small screens.<br/>
-                made by keletso makofane using pubmed api // interested in supporting the constellations project? donate to help cover hosting costs for the site // venmo: @Keletso-Makofane
-            </StyledSlider>
+            <Footer/>
 </>
 
     );

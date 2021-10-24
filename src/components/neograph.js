@@ -16,19 +16,23 @@ import Neovis from "neovis.js/dist/neovis.js";
             searchname,
             collabweight,
             startYear,
-            stopYear
+            stopYear,
+            encryptionStatus
         } = props;
 
 
         const visRef = useRef();
 
         useEffect(() => {
+
+            const enc = encryptionStatus ? "ENCRYPTION_ON" : "ENCRYPTION_OFF"
+
             const config = {
                 container_id: visRef.current.id,
                 server_url: neo4jUri,
                 server_user: neo4jUser,
                 server_password: neo4jPassword,
-                encrypted: "ENCRYPTION_OFF",
+                encrypted: enc,
                 labels: {
                     "Author": {
                         caption: "name",
