@@ -38,8 +38,6 @@ const Header = (props) => {
                 <form>
                         Researcher:  &nbsp; <input type="text" value={name} onChange={nameChange} list = "suggestions" />
                                             <datalist id="suggestions">
-                                                <option value="Boston"/>
-                                                <option value="Cambridge"/>
                                             </datalist>
                         &emsp; &emsp;
 
