@@ -11,6 +11,7 @@ const GlobalStyleNetworkVis = createGlobalStyle`
   html {
     box-sizing: border-box;
     width: 100%;
+    
   }
 
   *,

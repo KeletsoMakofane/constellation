@@ -64,8 +64,10 @@ import Neovis from "neovis.js/dist/neovis.js";
                 id={containerId}
                 ref={visRef}
                 style={{
-                    width: `${width}px`,
-                    height: `${height}px`,
+                    // width: `${width}px`,
+                    // height: `${height}px`,
+                    height: '100vh',
+                    width: '100%',
                     backgroundColor: `${backgroundColor}`,
                 }}
             />
@@ -92,7 +94,8 @@ import Neovis from "neovis.js/dist/neovis.js";
         const [resizeListener, sizes] = useResizeAware();
         let height = sizes.width / 1.9
 
-        const neoGraphProps = {...props, width: '100%', height: height};
+
+        const neoGraphProps = {...props, width: '100%', height: "100%"};
         return (
             <div style={{position: "relative"}}>
                 {resizeListener}

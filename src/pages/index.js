@@ -9,7 +9,7 @@ const NEO4J_USER = credentials.NEO4J_USER;
 const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
 
 // Encryption
-const ENCRYPTION = true;
+const ENCRYPTION = false;
 
 // Defaults
 const DEF_NAME = 'Krieger N';
