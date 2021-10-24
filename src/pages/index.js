@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {NeoGraphContainer} from "@components";
+import { NeoGraphContainer } from "@components";
+import { credentials } from '@components';
 
 // Credentials
-const NEO4J_URI =  "neo4j://graph.keletsomakofane.com";
-const NEO4J_USER = "neo4j";
-const NEO4J_PASSWORD = "gybsuv-merqaj-8Vuvsi";
+const NEO4J_URI =  credentials.NEO4J_URI;
+const NEO4J_USER = credentials.NEO4J_USER;
+const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
 
 // Encryption
-const ENCRYPTION = false;
+const ENCRYPTION = true;
 
 // Defaults
 const DEF_NAME = 'Krieger N';
