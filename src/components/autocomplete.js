@@ -4,6 +4,7 @@ const neo4j = require('neo4j-driver')
 const makeHtmlUpdate = (result) => {
     const names = result.records.map(item =>   `<option value= "${item.get('name')}" />` ).join("")
     document.getElementById("suggestions").innerHTML = names;
+    console.log(names);
   }
 
 const updateName = (url, username, password, searchString) => {
