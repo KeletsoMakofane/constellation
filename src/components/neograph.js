@@ -64,8 +64,8 @@ import Neovis from "neovis.js/dist/neovis.js";
                 id={containerId}
                 ref={visRef}
                 style={{
-                    width: `${width}px`,
-                    height: `${height}px`,
+                    width: `100%`,
+                    height: `100vh`,
                     backgroundColor: `${backgroundColor}`,
                 }}
             />
