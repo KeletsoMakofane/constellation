@@ -1,0 +1,171 @@
+##################################################################################
+## 1 COPY FILES TO IMPORT FOLDER 
+##################################################################################
+
+#### COPY PASTE DATA
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_gitrepos/PubmedWithNeo4j/import/" "ubuntu@54.221.24.212:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
+sudo cp -r ~/import /var/lib/neo4j/
+
+
+#### COPY PASTE CONFIGURATION
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/neo4j.template" "ubuntu@54.221.24.212:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
+sudo cp ~/neo4j.template /etc/neo4j
+sudo systemctl restart neo4j
+sudo systemctl status neo4j
+
+#### COPY PASTE Plugin
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  "/Users/keletsomakofane/Downloads/neo4j-graph-data-science-1.7.1.jar" "ubuntu@54.221.24.212:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
+sudo cp -r ~/neo4j-graph-data-science-1.7.1.jar /var/lib/neo4j/plugins
+sudo systemctl restart neo4j
+sudo systemctl status neo4j
+
+#### Directories
+home:         /var/lib/neo4j
+config:       /etc/neo4j
+logs:         /var/lib/neo4j/logs
+plugins:      /var/lib/neo4j/plugins
+import:       /var/lib/neo4j/import
+data:         /var/lib/neo4j/data
+certificates: /var/lib/neo4j/certificates
+licenses:     /var/lib/neo4j/licenses
+run:          /var/run/neo4j
+
+dbms.connector.http.enabled=$dbms_connector_http_enabled
+dbms.connector.http.advertised_address=$dbms_connector_http_advertised_address
+dbms.connector.http.listen_address=$dbms_connector_http_listen_address
+
+# With default configuration Neo4j only accepts local connections.
+# To accept non-local connections, uncomment this line:
+dbms.default_listen_address=$dbms_default_listen_address
+
+# You can also choose a specific network interface, and configure a non-default
+# port for each connector, by setting their individual listen_address.
+
+# The address at which this server can be reached by its clients. This may be the server's IP address or DNS name, or
+# it may be the address of a reverse proxy which sits in front of the server. This setting may be overridden for
+# individual connectors below.
+dbms.default_advertised_address=$dbms_default_advertised_address
+
+# Bolt connector
+dbms.connector.bolt.enabled=$dbms_connector_bolt_enabled
+dbms.connector.bolt.tls_level=$dbms_connector_bolt_tls_level
+dbms.connector.bolt.advertised_address=$dbms_connector_bolt_advertised_address
+dbms.ssl.policy.bolt.base_directory=$dbms_ssl_policy_bolt_base_directory
+dbms.ssl.policy.bolt.client_auth=$dbms_ssl_policy_bolt_client_auth
+dbms.ssl.policy.bolt.trust_all=$dbms_ssl_policy_bolt_trust_all
+
+# HTTP Connector. There must be exactly one HTTP connector.
+dbms.connector.http.enabled=$dbms_connector_http_enabled
+dbms.connector.http.advertised_address=$dbms_connector_http_advertised_address
+dbms.connector.http.listen_address=$dbms_connector_http_listen_address
+
+# HTTPS Connector. There can be zero or one HTTPS connectors.
+dbms.connector.https.enabled=$dbms_connector_https_enabled
+dbms.connector.https.advertised_address=$dbms_connector_https_advertised_address
+dbms.connector.https.listen_address=$dbms_connector_https_listen_address
+dbms.ssl.policy.https.base_directory=$dbms_ssl_policy_https_base_directory
+dbms.ssl.policy.https.client_auth=$dbms_ssl_policy_https_client_auth
+
+
+##################################################################################
+## 2 Include New Data to Network Database
+##################################################################################
+
+
+LOAD CSV WITH HEADERS FROM
+'file:///papers.csv' as row
+MERGE (m:Paper {id: toInteger(row.id)})
+ON CREATE SET
+m.title = row.title,
+m.year = toInteger(row.year);
+
+LOAD CSV WITH HEADERS FROM
+'file:///authors.csv' as row
+MERGE (m:Author {name: row.author});
+
+LOAD CSV WITH HEADERS FROM
+'file:///paper_author_edges.csv' as row
+MATCH (author:Author {name: row.author})
+MATCH (paper:Paper {id: toInteger(row.paper)})
+MERGE (author)-[:WROTE]->(paper);
+
+LOAD CSV WITH HEADERS FROM
+'file:///paper_paper_edges.csv' as row
+MATCH (from:Paper {id: toInteger(row.from)})
+MATCH (to:Paper {id: toInteger(row.to)})
+WITH from, to, count(*) as count
+MERGE (from)-[:CITED {weight: count}]->(to);
+
+MATCH (a:Author)-[:WROTE]-(:Paper)-[:WROTE]-(b:Author)
+WITH a, b, count(*) as count
+MERGE (a)-[:CO_AUTH {weight: count}]-(b);
+
+MATCH (a:Author)-[:WROTE]-(:Paper)-[:CITED]->(:Paper)-[:WROTE]-(b:Author)
+WITH a, b, count(*) as count
+MERGE (a)-[:CITED_AUTH {weight: count}]->(b);
+
+MATCH (a:Paper)-[:WROTE]-(:Author)-[:WROTE]-(b:Paper)
+WITH a, b, count(*) as count
+MERGE (a)-[:CO_WRITTEN {weight: count}]-(b);
+
+CALL gds.articleRank.write({nodeProjection: 'Author',
+relationshipProjection: 'CO_AUTH',
+writeProperty: 'pagerank'})
+YIELD centralityDistribution
+RETURN centralityDistribution;
+
+CALL gds.articleRank.write({nodeProjection: 'Paper',
+relationshipProjection: 'CITED',
+writeProperty: 'pagerank'})
+YIELD centralityDistribution
+RETURN centralityDistribution;
+
+CALL gds.articleRank.write({nodeProjection: 'Author',
+relationshipProjection: 'CITED_AUTH',
+writeProperty: 'pagerank_citations'})
+YIELD centralityDistribution
+RETURN centralityDistribution;
+
+CALL gds.beta.modularityOptimization.write({nodeProjection: 'Paper',
+relationshipProjection: 'CITED_AUTH',
+writeProperty: 'cited_community'})
+YIELD communityCount
+RETURN communityCount;
+
+CALL gds.beta.modularityOptimization.write({nodeProjection: 'Paper',
+relationshipProjection: 'CITED',
+writeProperty: 'community'})
+YIELD communityCount
+RETURN communityCount;
+
+CALL gds.beta.modularityOptimization.write({nodeProjection: 'Author',
+relationshipProjection: 'CO_AUTH',
+writeProperty: 'auth_community'})
+YIELD communityCount
+RETURN communityCount;
+
+CALL gds.beta.modularityOptimization.write({nodeProjection: 'Paper',
+relationshipProjection: 'CITED_AUTH',
+writeProperty: 'cited_community'})
+YIELD communityCount
+RETURN communityCount;
+
+
+##################################################################################
+## 3 OTHER
+##################################################################################
+
+# AFTER SSH TO RASPBERRY 
+sudo cp -a ~/temp/ /var/lib/neo4j/import/
+ 
+ scp -r /Users/keletsomakofane/Downloads/apoc-4.3.0.3-all.jar pi@192.168.1.208:~/
+ 
+ 
+ AMAZON WEB SERVICES
+ ssh -i neo4j-aws-newkey.pem ubuntu@ec2-54-226-147-146.compute-1.amazonaws.com
+ 
+ 
+ scp -r "/Users/keletsomakofane/Documents/_gitrepos/PubmedWithNeo4j/import" "pi@192.168.1.208:~/"
