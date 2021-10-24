@@ -20,7 +20,7 @@ import Neovis from "neovis.js/dist/neovis.js";
             encryptionStatus
         } = props;
 
-
+const urlWithProtocol = "neo4j://" + neo4jUri
         const visRef = useRef();
 
         useEffect(() => {
@@ -29,7 +29,7 @@ import Neovis from "neovis.js/dist/neovis.js";
 
             const config = {
                 container_id: visRef.current.id,
-                server_url: neo4jUri,
+                server_url: urlWithProtocol,
                 server_user: neo4jUser,
                 server_password: neo4jPassword,
                 encrypted: enc,

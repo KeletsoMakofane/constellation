@@ -9,8 +9,9 @@ const makeHtmlUpdate = (result) => {
 
 const updateName = (url, username, password, searchString) => {
 
+    const urlWithProtocol = "neo4j+s://" + url;
   const driver = neo4j.driver(
-  "neo4j+s://graph.keletsomakofane.com" ,
+  urlWithProtocol ,
   neo4j.auth.basic(username, password))
 
   const session = driver.session()
