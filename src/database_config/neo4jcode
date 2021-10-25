@@ -76,22 +76,24 @@ MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
 WITH a, b, count(*) as count
 MERGE (a)-[:CO_AUTH]-(b)
 
-MATCH (a:Author)-[:WROTE]-(:Paper)-[:CITED]->(:Paper)-[:WROTE]-(b:Author)
-WITH a, b, count(*) as count
-MERGE (a)-[:CITED_AUTH {weight: count}]->(b)
-
-CALL gds.articleRank.write({nodeProjection: 'Author',
-relationshipProjection: 'CITED_AUTH',relationshipProperties: 'weight',
-writeProperty: 'pagerank_citations', relationshipWeightProperty: 'weight'})
-
 CALL gds.beta.modularityOptimization.write({nodeProjection: 'Author',
 relationshipProjection: 'CO_AUTH',
-writeProperty: 'auth_community', relationshipWeightProperty: 'weight'})
+writeProperty: 'auth_community'})
 YIELD communityCount
 RETURN communityCount
 
 MATCH ()-[a:CO_AUTH]-()
 DELETE a
 
+
+
+MATCH (a:Author)-[:WROTE]-(:Paper)-[:CITED]->(:Paper)-[:WROTE]-(b:Author)
+WITH a, b, count(*) as count
+MERGE (a)-[:CITED_AUTH {weight: count}]->(b);
+
+CALL gds.articleRank.write({nodeProjection: 'Author',
+relationshipProjection: 'CITED_AUTH',relationshipProperties: 'weight',
+writeProperty: 'pagerank_citations', relationshipWeightProperty: 'weight'});
+
 MATCH ()-[a:CITED_AUTH]-()
-DELETE a
+DELETE a;

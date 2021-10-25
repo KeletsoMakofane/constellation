@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { NeoGraphContainer } from "@components";
+import { NeoGraphContainer, ComingSoon } from "@components";
 import { credentials } from '@components';
+import {Helmet} from "react-helmet";
 
 // Credentials
 const NEO4J_URI =  credentials.NEO4J_URI;
@@ -21,17 +22,17 @@ const PubMedPage = ({ location }) => {
 
 useEffect (() => {document.body.style.backgroundColor = "black"})
 
-  return (
-      <NeoGraphContainer
-          containerId={"id0"}
-          neo4jUri={NEO4J_URI}
-          neo4jUser={NEO4J_USER}
-          neo4jPassword={NEO4J_PASSWORD}
-          encryptionStatus = {ENCRYPTION}
-          defaultName = {DEF_NAME}
-          defaultStart = {DEF_START}
-          defaultStop = {DEF_STOP}
-          defaultTopic = {DEF_TOPIC}/>
+  return (<ComingSoon/>
+      // <NeoGraphContainer
+      //     containerId={"id0"}
+      //     neo4jUri={NEO4J_URI}
+      //     neo4jUser={NEO4J_USER}
+      //     neo4jPassword={NEO4J_PASSWORD}
+      //     encryptionStatus = {ENCRYPTION}
+      //     defaultName = {DEF_NAME}
+      //     defaultStart = {DEF_START}
+      //     defaultStop = {DEF_STOP}
+      //     defaultTopic = {DEF_TOPIC}/>
   );
 };
 
