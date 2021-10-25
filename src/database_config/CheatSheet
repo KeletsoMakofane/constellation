@@ -9,7 +9,7 @@ sudo cp -r ~/import /var/lib/neo4j/
 
 
 #### COPY PASTE CONFIGURATION
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/neo4j.template" "ubuntu@54.221.24.212:~/"
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "src/database_config/neo4j.template" "ubuntu@54.221.24.212:~/"
 ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
 sudo cp ~/neo4j.template /etc/neo4j
 sudo systemctl restart neo4j

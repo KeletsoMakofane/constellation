@@ -15,7 +15,7 @@ const ENCRYPTION = true;
 const DEF_NAME = 'Krieger N';
 const DEF_START = '1980';
 const DEF_STOP = '2021';
-
+const DEF_TOPIC = 'race'
 
 const PubMedPage = ({ location }) => {
 
@@ -30,7 +30,8 @@ useEffect (() => {document.body.style.backgroundColor = "black"})
           encryptionStatus = {ENCRYPTION}
           defaultName = {DEF_NAME}
           defaultStart = {DEF_START}
-          defaultStop = {DEF_STOP}/>
+          defaultStop = {DEF_STOP}
+          defaultTopic = {DEF_TOPIC}/>
   );
 };
 

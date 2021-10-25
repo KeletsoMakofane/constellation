@@ -27,7 +27,7 @@ const StyledForm = styled.div`
 
 
 const Header = (props) => {
-    const {name, weight, start, stop, nameChange, weightChange, startChange, stopChange, submit} = props;
+    const {name, weight, start, stop, topic, nameChange, weightChange, startChange, stopChange, topicChange, submit} = props;
 
     return(
         <ThemeProvider theme={theme}>
@@ -58,10 +58,13 @@ const Header = (props) => {
                         To:    &nbsp;<input type="number" size = "4" value = {stop} onChange = {stopChange}/>
                         &emsp; &emsp;
 
-                        On:  &nbsp; <select  name="on" id = "on">
-                                                    <option value="1" selected>Race/Racism</option>
-                                                    <option value="2">COVID-19 (coming soon)</option>
-                                                    <option value="3">Both (coming soon)</option>
+                        On:  &nbsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
+                                                    <option value="race" selected>Race</option>
+                                                    <option value="racism" >Racism (coming soon)</option>
+                                                    <option value="covid">COVID (coming soon)</option>
+                                                    <option value="race_covid">Race and COVID (coming soon)</option>
+                                                    <option value="racism_covid">Racism and COVID (coming soon)</option>
+                                                    <option value="all">Race or Racism or COVID</option>
                                             </select>
                         &emsp; &emsp; &emsp;
 

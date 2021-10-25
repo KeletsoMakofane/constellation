@@ -476,7 +476,7 @@ dbms.security.allow_csv_import_from_file_urls=$dbms_security_allow_csv_import_fr
 
 # Only allow read operations from this Neo4j instance. This mode still requires
 # write access to the directory for lock purposes.
-dbms.read_only=true
+dbms.read_only=false
 
 # Comma separated list of JAX-RS packages containing JAX-RS resources, one
 # package name for each mountpoint. The listed package names will be loaded

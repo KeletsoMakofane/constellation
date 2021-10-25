@@ -1,4 +1,5 @@
 module.exports = {
+  pathPrefix: "/constellations",
   siteMetadata: {
     siteUrl: "https://www.yourdomain.tld",
     title: "constellations",
