@@ -1,0 +1,162 @@
+CREATE CONSTRAINT UniquePaperIdConstraint ON (p:Paper) ASSERT p.id IS UNIQUE;
+CREATE CONSTRAINT UniqueAuthorIdConstraint ON (a:Author) ASSERT a.name IS UNIQUE;
+
+CREATE INDEX race_index
+FOR (p:Paper)
+ON (p.race);
+
+CREATE INDEX racism_index
+FOR (p:Paper)
+ON (p.racism);
+
+CREATE INDEX covid_index
+FOR (p:Paper)
+ON (p.covid);
+
+CREATE INDEX year_index
+FOR (p:Paper)
+ON (p.year);
+
+############ Papers
+
+:auto LOAD CSV WITH HEADERS FROM
+'file:///race_papers.csv' as row
+MERGE (m:Paper {id: toInteger(row.id)})
+ON CREATE SET
+m.title = row.title,
+m.year = toInteger(row.year),
+m.race = true;
+
+:auto LOAD CSV WITH HEADERS FROM
+'file:///racism_papers.csv' as row
+MERGE (m:Paper {id: toInteger(row.id)})
+ON CREATE SET
+m.title = row.title,
+m.year = toInteger(row.year),
+m.racism = true;
+
+:auto LOAD CSV WITH HEADERS FROM
+'file:///covid_papers.csv' as row
+MERGE (m:Paper {id: toInteger(row.id)})
+ON CREATE SET
+m.title = row.title,
+m.year = toInteger(row.year),
+m.covid = true;
+
+############ Authors
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///race_authors.csv' as row
+MERGE (m:Author {name: row.forename + " " + row.lastname})
+ON CREATE SET
+m.forename = row.forename,
+m.lastname = row.lastname;
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///racism_authors.csv' as row
+MERGE (m:Author {name: row.forename + " " + row.lastname})
+ON CREATE SET
+m.forename = row.forename,
+m.lastname = row.lastname;
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///covid_authors.csv' as row
+MERGE (m:Author {name: row.forename + " " + row.lastname})
+ON CREATE SET
+m.forename = row.forename,
+m.lastname = row.lastname;
+
+############ Authors and Papers
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///race_paper_author_edges.csv' as row
+MATCH (author:Author {name: row.forename + " " + row.lastname})
+MATCH (paper:Paper {id: toInteger(row.paper)})
+MERGE (author)-[:WROTE]->(paper);
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///racism_paper_author_edges.csv' as row
+MATCH (author:Author {name: row.forename + " " + row.lastname})
+MATCH (paper:Paper {id: toInteger(row.paper)})
+MERGE (author)-[:WROTE]->(paper);
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///covid_paper_author_edges.csv' as row
+MATCH (author:Author {name: row.forename + " " + row.lastname})
+MATCH (paper:Paper {id: toInteger(row.paper)})
+MERGE (author)-[:WROTE]->(paper);
+
+############ Paper Paper Citations
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///race_paper_paper_edges.csv' as row
+MATCH (from:Paper {id: toInteger(row.from)})
+MATCH (to:Paper {id: toInteger(row.to)})
+MERGE (from)-[:CITED]->(to);
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///racism_paper_paper_edges.csv' as row
+MATCH (from:Paper {id: toInteger(row.from)})
+MATCH (to:Paper {id: toInteger(row.to)})
+MERGE (from)-[:CITED]->(to);
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///covid_paper_paper_edges.csv' as row
+MATCH (from:Paper {id: toInteger(row.from)})
+MATCH (to:Paper {id: toInteger(row.to)})
+MERGE (from)-[:CITED]->(to);
+
+############ Coauthoring Communities
+CALL gds.graph.drop('collaborationNetwork');
+
+CALL gds.graph.create.cypher(
+  'collaborationNetwork',
+  'MATCH (n:Author) RETURN id(n) AS id, labels(n) AS labels',
+  'MATCH (a:Author)-[:WROTE]->(b:Paper)<-[:WROTE]-(b:Author)
+    RETURN id(a) AS source, id(b) AS target, count(b) as weight'
+)
+YIELD
+  graphName AS graph, nodeCount AS nodes, relationshipCount AS rels;
+
+
+CALL gds.labelPropagation.write('collaborationNetwork', { writeProperty: 'community' })
+YIELD communityCount, ranIterations, didConverge;
+
+CALL gds.graph.drop('collaborationNetwork');
+
+############ Citation Practices
+
+CALL gds.graph.drop('citationNetwork');
+
+CALL gds.graph.create.cypher(
+  'citationNetwork',
+  'MATCH (n:Author) RETURN id(n) AS id, labels(n) AS labels',
+  'MATCH (a:Author)-[:WROTE]-(p:Paper)-[:CITED]->(:Paper)-[:WROTE]-(b:Author)
+    RETURN id(a) AS source, id(b) AS target, count(p) as weight'
+)
+YIELD
+  graphName AS graph, nodeCount AS nodes, relationshipCount AS rels;
+
+CALL gds.articleRank.write('citationNetwork', {
+  writeProperty: 'auth_pagerank'
+})
+YIELD nodePropertiesWritten, ranIterations;
+
+CALL gds.graph.drop('citationNetwork');
+
+
+
+
+
+
+
+

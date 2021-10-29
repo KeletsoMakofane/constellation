@@ -10,7 +10,7 @@ const NEO4J_USER = credentials.NEO4J_USER;
 const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
 
 // Encryption
-const ENCRYPTION = true;
+const ENCRYPTION = false;
 
 // Defaults
 const DEF_NAME = 'Krieger N';
@@ -22,17 +22,17 @@ const PubMedPage = ({ location }) => {
 
 useEffect (() => {document.body.style.backgroundColor = "black"})
 
-  return (<ComingSoon/>
-      // <NeoGraphContainer
-      //     containerId={"id0"}
-      //     neo4jUri={NEO4J_URI}
-      //     neo4jUser={NEO4J_USER}
-      //     neo4jPassword={NEO4J_PASSWORD}
-      //     encryptionStatus = {ENCRYPTION}
-      //     defaultName = {DEF_NAME}
-      //     defaultStart = {DEF_START}
-      //     defaultStop = {DEF_STOP}
-      //     defaultTopic = {DEF_TOPIC}/>
+  return (
+      <NeoGraphContainer
+          containerId={"id0"}
+          neo4jUri={NEO4J_URI}
+          neo4jUser={NEO4J_USER}
+          neo4jPassword={NEO4J_PASSWORD}
+          encryptionStatus = {ENCRYPTION}
+          defaultName = {DEF_NAME}
+          defaultStart = {DEF_START}
+          defaultStop = {DEF_STOP}
+          defaultTopic = {DEF_TOPIC}/>
   );
 };
 

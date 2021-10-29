@@ -23,26 +23,26 @@ import Neovis from "neovis.js/dist/neovis.js";
 
         switch (topicChosen) {
             case "race":
-                topicRestriction = "p.race = true";
+                topicRestriction = "p.race = true AND EXISTS(p.race)";
                 break;
 
             case "racism":
-                topicRestriction = "p.racism = true";
+                topicRestriction = "p.racism = true AND EXISTS(p.racism)";
 
                 break;
 
             case "covid":
-                topicRestriction = "p.covid = true";
+                topicRestriction = "p.covid = true AND EXISTS(p.covid)";
 
                 break;
 
             case "race_covid":
-                topicRestriction = "p.race = true AND p.covid = true";
+                topicRestriction = "p.race = true AND p.covid = true AND EXISTS(p.race) AND EXISTS(p.covid)";
 
                 break;
 
             case "racism_covid":
-                topicRestriction = "p.racism = true AND p.covid = true";
+                topicRestriction = "p.racism = true AND p.covid = true AND EXISTS(p.racism) AND EXISTS(p.covid)";
                 break;
 
                 default:

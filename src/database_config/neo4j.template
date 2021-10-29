@@ -73,7 +73,7 @@ dbms.default_advertised_address=graph.keletsomakofane.com
 
 # Bolt connector
 dbms.connector.bolt.enabled=true
-dbms.connector.bolt.tls_level=OPTIONAL
+dbms.connector.bolt.tls_level=REQUIRED
 dbms.connector.bolt.advertised_address=graph.keletsomakofane.com:7687
 dbms.ssl.policy.bolt.base_directory=/var/lib/neo4j/certificates/bolt
 dbms.ssl.policy.bolt.client_auth=NONE
