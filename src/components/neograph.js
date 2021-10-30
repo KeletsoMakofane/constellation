@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import useResizeAware from "react-resize-aware";
 import PropTypes from "prop-types";
 import Neovis from "neovis.js/dist/neovis.js";
+import { TopicRestriction } from "@components";
 
 
     const NeoGraph = (props) => {
@@ -19,38 +20,6 @@ import Neovis from "neovis.js/dist/neovis.js";
             encryptionStatus,
             neovisProtocol,
         } = props;
-
-        let topicRestriction;
-
-        switch (topicChosen) {
-            case "race":
-                topicRestriction = "p.race = true AND EXISTS(p.race)";
-                break;
-
-            case "racism":
-                topicRestriction = "p.racism = true AND EXISTS(p.racism)";
-
-                break;
-
-            case "covid":
-                topicRestriction = "p.covid = true AND EXISTS(p.covid)";
-
-                break;
-
-            case "race_covid":
-                topicRestriction = "p.race = true AND p.covid = true AND EXISTS(p.race) AND EXISTS(p.covid)";
-
-                break;
-
-            case "racism_covid":
-                topicRestriction = "p.racism = true AND p.covid = true AND EXISTS(p.racism) AND EXISTS(p.covid)";
-                break;
-
-                default:
-                topicRestriction = "p.race = true OR p.racism = true OR p.covid = true";
-
-                break;
-        }
 
 
         const urlWithProtocol = neovisProtocol + neo4jUri
@@ -87,13 +56,13 @@ import Neovis from "neovis.js/dist/neovis.js";
                         thickness: 'count',
                     }
                 },
-                 initial_cypher: `MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`
+                 initial_cypher: `MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`
             };
             const vis = new Neovis(config);
             vis.render();
             // console.log(vis);
-            // console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
-        }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicRestriction, encryptionStatus, urlWithProtocol]);
+            console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
+        }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicChosen, encryptionStatus, urlWithProtocol]);
 
         return (
             <div

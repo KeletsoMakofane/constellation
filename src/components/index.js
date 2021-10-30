@@ -6,3 +6,4 @@ export { default as Footer } from './footer';
 export { default as updateName} from './autocomplete';
 export { default as credentials} from './credentials';
 export { default as ComingSoon } from './comingsoon';
+export { default as TopicRestriction } from './topics';

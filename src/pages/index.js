@@ -14,7 +14,7 @@ const ENCRYPTION = credentials.NEOVIS_ENCRYPTION;
 
 // Defaults
 const DEF_NAME = 'Keletso Makofane';
-const DEF_START = '2003';
+const DEF_START = '2015';
 const DEF_STOP = '2021';
 const DEF_TOPIC = 'all'
 
