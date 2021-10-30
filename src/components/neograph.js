@@ -91,8 +91,8 @@ import Neovis from "neovis.js/dist/neovis.js";
             };
             const vis = new Neovis(config);
             vis.render();
-            console.log(vis);
-            console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
+            // console.log(vis);
+            // console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
         }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicRestriction, encryptionStatus, urlWithProtocol]);
 
         return (
