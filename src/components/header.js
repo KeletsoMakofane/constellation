@@ -27,7 +27,7 @@ const StyledForm = styled.div`
 
 
 const Header = (props) => {
-    const {name, weight, start, stop, topic, nameChange, weightChange, startChange, stopChange, topicChange, submit} = props;
+    const {name, weight, start, stop, topic, nameChange, weightChange, startChange, stopChange, topicChange, submit, nameOptions} = props;
 
     return(
         <ThemeProvider theme={theme}>
@@ -38,6 +38,7 @@ const Header = (props) => {
                 <form>
                         Researcher:  &nbsp; <input type="text" value={name} onChange={nameChange} list = "suggestions" />
                                             <datalist id="suggestions">
+                                                {nameOptions}
                                             </datalist>
                         &emsp; &emsp;
 

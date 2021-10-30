@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import useResizeAware from "react-resize-aware";
 import PropTypes from "prop-types";
 import Neovis from "neovis.js/dist/neovis.js";
+import { TopicRestriction } from "@components";
 
 
     const NeoGraph = (props) => {
@@ -16,43 +17,12 @@ import Neovis from "neovis.js/dist/neovis.js";
             startYear,
             stopYear,
             topicChosen,
-            encryptionStatus
+            encryptionStatus,
+            neovisProtocol,
         } = props;
 
-        let topicRestriction;
 
-        switch (topicChosen) {
-            case "race":
-                topicRestriction = "p.race = true";
-                break;
-
-            case "racism":
-                topicRestriction = "p.racism = true";
-
-                break;
-
-            case "covid":
-                topicRestriction = "p.covid = true";
-
-                break;
-
-            case "race_covid":
-                topicRestriction = "p.race = true AND p.covid = true";
-
-                break;
-
-            case "racism_covid":
-                topicRestriction = "p.racism = true AND p.covid = true";
-                break;
-
-                default:
-                topicRestriction = "p.race = true OR p.racism = true OR p.covid = true";
-
-                break;
-        }
-
-
-        const urlWithProtocol = "neo4j://" + neo4jUri
+        const urlWithProtocol = neovisProtocol + neo4jUri
         const visRef = useRef();
 
         useEffect(() => {
@@ -65,11 +35,12 @@ import Neovis from "neovis.js/dist/neovis.js";
                 server_user: neo4jUser,
                 server_password: neo4jPassword,
                 encrypted: enc,
+                trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES",
                 labels: {
                     "Author": {
                         caption: "name",
-                        size: "pagerank_citations",
-                        community: 'auth_community',
+                        size: "auth_pagerank",
+                        community: 'community',
                         title_properties: ["name"],
                         shape: "diamond",
                         font: {
@@ -85,18 +56,20 @@ import Neovis from "neovis.js/dist/neovis.js";
                         thickness: 'count',
                     }
                 },
-                 initial_cypher: `MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE (${topicRestriction}) AND c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`
+                 initial_cypher: `MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`
             };
             const vis = new Neovis(config);
             vis.render();
-        }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicRestriction]);
+            // console.log(vis);
+            // console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
+        }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicChosen, encryptionStatus, urlWithProtocol]);
 
         return (
             <div
                 id={containerId}
                 ref={visRef}
                 style={{
-                    width: `100%`,
+                    // width: `100%`,
                     height: `100vh`,
                     backgroundColor: `${backgroundColor}`,
                 }}
@@ -124,7 +97,7 @@ import Neovis from "neovis.js/dist/neovis.js";
         const [resizeListener, sizes] = useResizeAware();
         let height = sizes.width / 1.9
 
-        const neoGraphProps = {...props, width: '100%', height: height};
+        const neoGraphProps = {...props, width: sizes.width, height: height};
         return (
             <div style={{position: "relative"}}>
                 {resizeListener}

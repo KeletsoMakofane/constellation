@@ -35,8 +35,8 @@ dbms.security.auth_enabled=true
 # calculated based on available system resources.
 # Uncomment these lines to set specific initial and maximum
 # heap size.
-dbms.memory.heap.initial_size=10g
-dbms.memory.heap.max_size=10g
+#dbms.memory.heap.initial_size=10g
+#dbms.memory.heap.max_size=10g
 
 # The amount of memory to use for mapping the store files, in bytes (or
 # kilobytes with the 'k' suffix, megabytes with 'm' and gigabytes with 'g').
@@ -73,7 +73,7 @@ dbms.default_advertised_address=graph.keletsomakofane.com
 
 # Bolt connector
 dbms.connector.bolt.enabled=true
-dbms.connector.bolt.tls_level=OPTIONAL
+dbms.connector.bolt.tls_level=REQUIRED
 dbms.connector.bolt.advertised_address=graph.keletsomakofane.com:7687
 dbms.ssl.policy.bolt.base_directory=/var/lib/neo4j/certificates/bolt
 dbms.ssl.policy.bolt.client_auth=NONE

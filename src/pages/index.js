@@ -8,31 +8,32 @@ import {Helmet} from "react-helmet";
 const NEO4J_URI =  credentials.NEO4J_URI;
 const NEO4J_USER = credentials.NEO4J_USER;
 const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
+const NEOVIS_PROTOCOL = credentials.NEOVIS_PROTOCOL;
+const NEOVIS_ENCRYPTION = credentials.NEOVIS_ENCRYPTION;
 
-// Encryption
-const ENCRYPTION = true;
 
 // Defaults
-const DEF_NAME = 'Krieger N';
-const DEF_START = '1980';
+const DEF_NAME = 'Keletso Makofane';
+const DEF_START = '2015';
 const DEF_STOP = '2021';
-const DEF_TOPIC = 'race'
+const DEF_TOPIC = 'all'
 
 const PubMedPage = ({ location }) => {
 
 useEffect (() => {document.body.style.backgroundColor = "black"})
 
-  return (<ComingSoon/>
-      // <NeoGraphContainer
-      //     containerId={"id0"}
-      //     neo4jUri={NEO4J_URI}
-      //     neo4jUser={NEO4J_USER}
-      //     neo4jPassword={NEO4J_PASSWORD}
-      //     encryptionStatus = {ENCRYPTION}
-      //     defaultName = {DEF_NAME}
-      //     defaultStart = {DEF_START}
-      //     defaultStop = {DEF_STOP}
-      //     defaultTopic = {DEF_TOPIC}/>
+  return (
+      <NeoGraphContainer
+          containerId={"id0"}
+          neo4jUri={NEO4J_URI}
+          neo4jUser={NEO4J_USER}
+          neo4jPassword={NEO4J_PASSWORD}
+          neovisEncryptionStatus = {NEOVIS_ENCRYPTION}
+          neovisProtocol = {NEOVIS_PROTOCOL}
+          defaultName = {DEF_NAME}
+          defaultStart = {DEF_START}
+          defaultStop = {DEF_STOP}
+          defaultTopic = {DEF_TOPIC}/>
   );
 };
 

@@ -2,15 +2,21 @@
 ## 1 COPY FILES TO IMPORT FOLDER 
 ##################################################################################
 
-#### COPY PASTE DATA
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_gitrepos/PubmedWithNeo4j/import/" "ubuntu@54.221.24.212:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
+#### UPLOAD DATA to AWS
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_gitrepos/PubmedWithNeo4j/import/" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
+sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/
+cd ~/
+sudo rm -r import
+
+#### download Data from RCE
+scp -r "kem073@rce.hmdc.harvard.edu:~/shared_space/thesis_kem073/_gitrepos/PubmedWithNeo4j/import/" "/Users/keletsomakofane/Documents/_gitrepos/PubmedWithNeo4j/"
 
 
 #### COPY PASTE CONFIGURATION
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "src/database_config/neo4j.template" "ubuntu@54.221.24.212:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/database_config/neo4j.template" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
 sudo cp ~/neo4j.template /etc/neo4j
 sudo systemctl restart neo4j
 sudo systemctl status neo4j
