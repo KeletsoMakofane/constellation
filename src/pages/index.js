@@ -13,7 +13,7 @@ const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
 const ENCRYPTION = false;
 
 // Defaults
-const DEF_NAME = 'Krieger N';
+const DEF_NAME = 'Nancy Krieger';
 const DEF_START = '1980';
 const DEF_STOP = '2021';
 const DEF_TOPIC = 'race'

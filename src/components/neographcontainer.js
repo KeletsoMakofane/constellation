@@ -52,6 +52,12 @@ class NeoGraphContainer extends React.Component {
                            queryStop: this.state.stop,
                            queryTopic: this.state.topic});
       event.preventDefault();
+
+      console.log(this.state.name);
+      console.log(this.state.weight);
+      console.log(this.state.start);
+      console.log(this.state.stop);
+      console.log(this.state.topic);
   }
 
 
