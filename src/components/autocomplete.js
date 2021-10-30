@@ -9,20 +9,20 @@ const makeHtmlUpdate = (result) => {
 
 const updateName = (url, username, password, searchString) => {
 
-    const urlWithProtocol = "neo4j+s://" + url;
-  const driver = neo4j.driver(
-  urlWithProtocol ,
-  neo4j.auth.basic(username, password))
-
-  const session = driver.session()
-
-  session
-  .run(`MATCH (a:Author) WHERE a.name STARTS WITH "${searchString}" RETURN a.name AS name ORDER BY name LIMIT 5`)
-  .then(makeHtmlUpdate)
-  .catch(error => {
-    console.log(error)
-  })
-  .then(() => session.close())
+  //   const urlWithProtocol = "neo4j://" + url;
+  // const driver = neo4j.driver(
+  // urlWithProtocol ,
+  // neo4j.auth.basic(username, password))
+  //
+  // const session = driver.session()
+  //
+  // session
+  // .run(`MATCH (a:Author) WHERE a.name STARTS WITH "${searchString}" RETURN a.name AS name ORDER BY name LIMIT 5`)
+  // .then(makeHtmlUpdate)
+  // .catch(error => {
+  //   console.log(error)
+  // })
+  // .then(() => session.close())
 
 }
 

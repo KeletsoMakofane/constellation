@@ -16,7 +16,8 @@ import Neovis from "neovis.js/dist/neovis.js";
             startYear,
             stopYear,
             topicChosen,
-            encryptionStatus
+            encryptionStatus,
+            neovisProtocol,
         } = props;
 
         let topicRestriction;
@@ -52,7 +53,7 @@ import Neovis from "neovis.js/dist/neovis.js";
         }
 
 
-        const urlWithProtocol = "neo4j://" + neo4jUri
+        const urlWithProtocol = neovisProtocol + neo4jUri
         const visRef = useRef();
 
         useEffect(() => {
@@ -65,11 +66,12 @@ import Neovis from "neovis.js/dist/neovis.js";
                 server_user: neo4jUser,
                 server_password: neo4jPassword,
                 encrypted: enc,
+                trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES",
                 labels: {
                     "Author": {
                         caption: "name",
-                        size: "pagerank_citations",
-                        community: 'auth_community',
+                        size: "auth_pagerank",
+                        community: 'community',
                         title_properties: ["name"],
                         shape: "diamond",
                         font: {
@@ -89,7 +91,8 @@ import Neovis from "neovis.js/dist/neovis.js";
             };
             const vis = new Neovis(config);
             vis.render();
-            console.log("render");
+            console.log(vis);
+            console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
         }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicRestriction, encryptionStatus, urlWithProtocol]);
 
         return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveNeoGraph, Header, Footer, updateName } from '@components';
+import { ResponsiveNeoGraph, Header, Footer } from '@components';
 
 class NeoGraphContainer extends React.Component {
   constructor(props) {
@@ -26,7 +26,6 @@ class NeoGraphContainer extends React.Component {
 
   handleChangeN(event) {
     this.setState({name: event.target.value});
-    updateName(this.props.neo4jUri, this.props.neo4jUser, this.props.neo4jPassword, this.state.name)
   }
 
   handleChangeW(event) {
@@ -72,6 +71,7 @@ class NeoGraphContainer extends React.Component {
                     neo4jUri={this.props.neo4jUri}
                     neo4jUser={this.props.neo4jUser}
                     neo4jPassword={this.props.neo4jPassword}
+                    neovisProtocol = {this.props.neovisProtocol}
                     searchname={this.state.queryName}
                     collabweight={this.state.queryWeight}
                     startYear = {this.state.queryStart}

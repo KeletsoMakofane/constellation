@@ -8,9 +8,9 @@ import {Helmet} from "react-helmet";
 const NEO4J_URI =  credentials.NEO4J_URI;
 const NEO4J_USER = credentials.NEO4J_USER;
 const NEO4J_PASSWORD = credentials.NEO4J_PASSWORD;
+const NEOVIS_PROTOCOL = credentials.NEOVIS_PROTOCOL;
+const ENCRYPTION = credentials.NEOVIS_ENCRYPTION;
 
-// Encryption
-const ENCRYPTION = false;
 
 // Defaults
 const DEF_NAME = 'Nancy Krieger';
@@ -29,6 +29,7 @@ useEffect (() => {document.body.style.backgroundColor = "black"})
           neo4jUser={NEO4J_USER}
           neo4jPassword={NEO4J_PASSWORD}
           encryptionStatus = {ENCRYPTION}
+          neovisProtocol = {NEOVIS_PROTOCOL}
           defaultName = {DEF_NAME}
           defaultStart = {DEF_START}
           defaultStop = {DEF_STOP}
