@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveNeoGraph, Header, Footer } from '@components';
+import { ResponsiveNeoGraph, Header, Footer, updateName } from '@components';
 
 class NeoGraphContainer extends React.Component {
   constructor(props) {
@@ -24,9 +24,12 @@ class NeoGraphContainer extends React.Component {
 
   }
 
+
   handleChangeN(event) {
     this.setState({name: event.target.value});
+    updateName(this.state.name);
   }
+
 
   handleChangeW(event) {
     this.setState({weight: event.target.value});
@@ -59,9 +62,7 @@ class NeoGraphContainer extends React.Component {
       // console.log(this.state.topic);
   }
 
-
   render() {
-
 
     return (
         <>
