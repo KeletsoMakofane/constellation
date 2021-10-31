@@ -25,8 +25,10 @@
     "gatsby-plugin-styled-components": "^5.0.0",
     "neo4j-driver": "^4.3.4",
     "neovis.js": "^1.6.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^16.13.0",
+    "react-async-hook": "^4.0.0",
+    "react-autocomplete": "^1.8.1",
+    "react-dom": "^16.13.0",
     "react-helmet": "^6.1.0",
     "react-resize-aware": "^3.1.1",
     "styled-components": "^5.3.3"
