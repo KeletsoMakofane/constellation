@@ -85,7 +85,7 @@ const Header = (props) => {
                         &emsp; &emsp;
 
                         Show:  &nbsp; <select  name="weight" id = "weight" value = {weight} onChange={weightChange}>
-                                                    <option value="1" selected>1+ Papers</option>
+                                                    <option value="1" >1+ Papers</option>
                                                     <option value="2">2+ Papers</option>
                                                     <option value="3">3+ Papers</option>
                                                     <option value="4">4+ Papers</option>
@@ -102,11 +102,11 @@ const Header = (props) => {
                         &emsp; &emsp;
 
                         On:  &nbsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
-                                                    <option value="race" selected>Race</option>
-                                                    <option value="racism" >Racism (coming soon)</option>
-                                                    <option value="covid">COVID (coming soon)</option>
-                                                    <option value="race_covid">Race and COVID (coming soon)</option>
-                                                    <option value="racism_covid">Racism and COVID (coming soon)</option>
+                                                    <option value="race" >Race</option>
+                                                    <option value="racism" >Racism</option>
+                                                    <option value="covid">COVID</option>
+                                                    <option value="race_covid">Race and COVID</option>
+                                                    <option value="racism_covid">Racism and COVID</option>
                                                     <option value="all">Race or Racism or COVID</option>
                                             </select>
                         &emsp; &emsp; &emsp;
