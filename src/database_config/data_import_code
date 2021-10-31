@@ -1,19 +1,26 @@
-CREATE CONSTRAINT UniquePaperIdConstraint ON (p:Paper) ASSERT p.id IS UNIQUE;
-CREATE CONSTRAINT UniqueAuthorIdConstraint ON (a:Author) ASSERT a.name IS UNIQUE;
+CREATE CONSTRAINT UniquePaperIdConstraint IF NOT EXISTS
+ON (p:Paper)
+ASSERT p.id IS UNIQUE;
 
-CREATE INDEX race_index
+CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+ON (a:Author)
+ASSERT a.name IS UNIQUE;
+
+CREATE FULLTEXT INDEX NameFulltextIndex FOR (n:Author) ON EACH [n.name];
+
+CREATE INDEX race_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.race);
 
-CREATE INDEX racism_index
+CREATE INDEX racism_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.racism);
 
-CREATE INDEX covid_index
+CREATE INDEX covid_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.covid);
 
-CREATE INDEX year_index
+CREATE INDEX year_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.year);
 
