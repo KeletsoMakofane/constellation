@@ -40,7 +40,7 @@ const StyledForm = styled.div`
             const result = pulled && pulled.records.map(item => {const node = Object.create({});
                                                                          node.name = item.get("name");
                                                                             return node});
-            console.log(result)
+
             return result
 
             }

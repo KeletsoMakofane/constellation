@@ -31,7 +31,7 @@ const Footer = () => {
         <ThemeProvider theme={theme}>
             <GlobalStyleNetworkVis />
             <StyledSlider>
-                this takes a moment to load. take a deep breath and count to 10. go fullscreen. float over and drag nodes, edges, and background. scroll to zoom. not great on small screens.<br/>
+                ... Still ironing out a few kinks. Watch this space. <br/>
                 made by keletso makofane using pubmed api // interested in supporting the constellations project? donate to help cover hosting costs for the site // venmo: @Keletso-Makofane
             </StyledSlider>
         </ThemeProvider>
