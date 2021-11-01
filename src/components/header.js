@@ -68,7 +68,7 @@ const Header = (props) => {
 
             <StyledForm>
                 <form>
-                        Researcher:  &nbsp;     <Autocomplete
+                        Researcher:  &emsp;     <Autocomplete
                                                      getItemValue = {(item) => item.name}
                                                      items={displayList}
 
@@ -84,7 +84,7 @@ const Header = (props) => {
                                                  />
                         &emsp; &emsp;
 
-                        Show:  &nbsp; <select  name="weight" id = "weight" value = {weight} onChange={weightChange}>
+                        Collaboration Strength:  &emsp; <select  name="weight" id = "weight" value = {weight} onChange={weightChange}>
                                                     <option value="1" >1+ Papers</option>
                                                     <option value="2">2+ Papers</option>
                                                     <option value="3">3+ Papers</option>
@@ -95,13 +95,13 @@ const Header = (props) => {
                         </select>
                         &emsp; &emsp;
 
-                        From:  &nbsp;<input type="number" size = "4" value = {start} onChange = {startChange}/>
+                        Date Range:  &emsp;<input type="number" style = {{width: '70px'}} value = {start} onChange = {startChange}/>
+                        &emsp;
+
+                            <input type="number" style = {{width: '70px'}} value = {stop} onChange = {stopChange}/>
                         &emsp; &emsp;
 
-                        To:    &nbsp;<input type="number" size = "4" value = {stop} onChange = {stopChange}/>
-                        &emsp; &emsp;
-
-                        On:  &nbsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
+                        Author/Title Search:  &emsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
                                                     <option value="race" >Race</option>
                                                     <option value="racism" >Racism</option>
                                                     <option value="covid">COVID</option>
