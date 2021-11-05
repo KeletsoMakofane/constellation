@@ -1,0 +1,70 @@
+
+
+ CREATE CONSTRAINT UniqueProjectConstraint IF NOT EXISTS
+ ON (p:Project)
+ ASSERT p.id IS UNIQUE;
+
+ CREATE CONSTRAINT UniqueOrganizationConstraint IF NOT EXISTS
+ ON (p:Organization)
+ ASSERT p.id IS UNIQUE;
+
+ CREATE CONSTRAINT UniqueInvestigatorConstraint2 IF NOT EXISTS
+ ON (p:Investigator)
+ ASSERT p.id IS UNIQUE;
+
+
+ CREATE CONSTRAINT UniquePaperConstraint IF NOT EXISTS
+ ON (p:Paper)
+ ASSERT p.id IS UNIQUE;
+
+
+ :auto LOAD CSV WITH HEADERS FROM
+ 'file:///project.csv' as row
+ MERGE (m:Project {id: row.id})
+ ON CREATE SET
+ m.title = row.title;
+
+ :auto LOAD CSV WITH HEADERS FROM
+ 'file:///organization.csv' as row
+ MERGE (m:Organization {id: row.organization})
+ ON CREATE SET
+ m.name = row.organization_name;
+
+ :auto LOAD CSV WITH HEADERS FROM
+ 'file:///investigator.csv' as row
+ MERGE (m:Investigator {id: row.name})
+ ON CREATE SET
+ m.id = row.id;
+
+
+ :auto using periodic commit
+ LOAD CSV WITH HEADERS FROM
+ 'file:///paper_project_edges.csv' as row
+ MATCH (from:Paper {id: toInteger(row.id_paper)})
+ MATCH (to:Project {id: row.id_project})
+ MERGE (to)-[:SUPPORTED]->(from);
+
+ :auto using periodic commit
+ LOAD CSV WITH HEADERS FROM
+ 'file:///sub_project.csv' as row
+ MATCH (from:Project {id: row.parent})
+ MATCH (to:Project {id: row.child})
+ MERGE (from)-[:PARENT_PROJ]->(to);
+
+ :auto using periodic commit
+ LOAD CSV WITH HEADERS FROM
+ 'file:///organization_to_project.csv' as row
+ MATCH (to:Project {id: row.project})
+ MATCH (from:Organization {id: row.organization})
+ MERGE (from)-[:ADMINISTERS]->(to);
+
+  :auto using periodic commit
+ LOAD CSV WITH HEADERS FROM
+ 'file:///project_investigator_edges.csv' as row
+ MATCH (to:Project {id: row.project})
+ MATCH (from:Investigator {id: row.pi})
+ MERGE (from)-[:LED]->(to);
+
+
+
+

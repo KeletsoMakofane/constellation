@@ -22,7 +22,7 @@ const StyledForm = styled.div`
   z-index: 0;
 
   width: 100%;
-  height: var(--nav-height);
+  height: 10%;
   background-color: rgba(0, 0, 0, 0.5);
   filter: none !important;
   backdrop-filter: blur(10px);
@@ -68,6 +68,10 @@ const Header = (props) => {
 
             <StyledForm>
                 <form>
+                    <p></p>
+                    <p>THE CONSTELLATIONS PROJECT</p>
+                    <p></p>
+
                         Researcher:  &emsp;     <Autocomplete
                                                      getItemValue = {(item) => item.name}
                                                      items={displayList}
