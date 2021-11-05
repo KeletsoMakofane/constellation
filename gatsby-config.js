@@ -1,8 +1,8 @@
 module.exports = {
-  pathPrefix: "/constellations",
+  //pathPrefix: "/constellations",
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
-    title: "constellations",
+    siteUrl: "https://constellationsproject.app",
+    title: "The Constellations Project",
   },
   plugins: [
     "gatsby-plugin-styled-components",
