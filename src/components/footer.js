@@ -79,7 +79,7 @@ const Footer = () => {
         const popupWindow =     <StyledPopup>
                                     <StyledMessageBox>
                                         ABOUT<br/><br/>
-                                        The Constellations Project aims to show the constellations of researchers, collaborations, and funding that produce public health scholarship. The initial focus is scholarship on racism and health. Let us know about your experience using this tool at kmakofane(at)g[dot]harvard(dot)edu
+                                        The Constellations Project aims to show the constellations of researchers, collaborations, and funding that produce public health scholarship. The initial focus is scholarship on racism and health. Let us know about your experience using this tool at kmakofane(at)g[dot]harvard(dot)edu. Spread the word - tweet about it (tag @klts0 pls)!
                                     </StyledMessageBox>
 
                                     <StyledMessageBox>
