@@ -1,8 +1,6 @@
 import React, {useState} from "react";
 import { ResponsiveNeoGraph, Header, Footer } from '@components';
-import neo4j from "neo4j-driver";
-
-
+import { trackCustomEvent } from "gatsby-plugin-google-analytics"
 
 
 const NeoGraphContainer = (props) => {
@@ -46,6 +44,13 @@ const NeoGraphContainer = (props) => {
         setQueryTopic(topic);
         setQueryWeight(weight);
         e.preventDefault();
+
+        trackCustomEvent({
+          category: "Submit Button",
+          action: "Search",
+          label: queryName,
+          value: 88,
+        })
     }
 
 

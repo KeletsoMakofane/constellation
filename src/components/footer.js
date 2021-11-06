@@ -34,6 +34,7 @@ const StyledPopup = styled.div`
   line-height: 1;
   margin: 0px 10px 0px 10px;
   outline: 0.5px solid var(--light-slate);
+    vertical-align: text-top;
   
   float: left;
   position: fixed;
@@ -58,11 +59,12 @@ const StyledMessageBox = styled.div`
   font-size: var(--fz-xxs);
   line-height: 1.5;
   margin: 10px 15px 10px 15px;
+  vertical-align: text-top;
   
 top: 0;
   width: 100%;
   float: left
-  height: 30%;
+  height: 100%;
 `;
 
 const Footer = () => {
@@ -77,7 +79,7 @@ const Footer = () => {
         const popupWindow =     <StyledPopup>
                                     <StyledMessageBox>
                                         ABOUT<br/><br/>
-                                        The Constellations Project aims to clarify relationships between public health researchers, their collaborators, and the research they publish together.
+                                        The Constellations Project aims to show the constellations of researchers, collaborations, and funding that produce public health scholarship. The initial focus is scholarship on racism and health. Let us know about your experience using this tool at kmakofane(at)g[dot]harvard(dot)edu
                                     </StyledMessageBox>
 
                                     <StyledMessageBox>
@@ -87,7 +89,7 @@ const Footer = () => {
 
                                     <StyledMessageBox>
                                         CREW<br/><br/>
-                                        Led by Keletso Makofane with Brittney Butler, Tori Cowger, Justin Feldman, Jourdyn Lawrence, and Marie Plaisime. Supported by the Harvard FXB Center for Health and Human Rights. Contact: kmakofane[at]g[dot]harvard[dot]edu
+                                        Led by Keletso Makofane with Brittney Butler, Tori Cowger, Justin Feldman, Jourdyn Lawrence, and Marie Plaisime. Supported by the Harvard FXB Center for Health and Human Rights.
                                     </StyledMessageBox>
 
                                 </StyledPopup>

@@ -21,6 +21,7 @@
     "gatsby": "^4.0.0",
     "gatsby-plugin-alias-imports": "^1.0.5",
     "gatsby-plugin-google-analytics": "^4.0.0",
+    "gatsby-plugin-google-gtag": "^4.1.0",
     "gatsby-plugin-react-helmet": "^5.0.0",
     "gatsby-plugin-styled-components": "^5.0.0",
     "neo4j-driver": "^4.3.4",

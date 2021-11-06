@@ -65,6 +65,29 @@
  MATCH (from:Investigator {id: row.pi})
  MERGE (from)-[:LED]->(to);
 
-
+  :auto using periodic commit
+ LOAD CSV WITH HEADERS FROM
+ 'file:///project_costs.csv' as row
+ MATCH (p:Project {id: row.project_id})
+SET
+p.costs_2003 = toInteger(row.total_cost_2003),
+p.costs_2004 = toInteger(row.total_cost_2004),
+p.costs_2005 = toInteger(row.total_cost_2005),
+p.costs_2006 = toInteger(row.total_cost_2006),
+p.costs_2007 = toInteger(row.total_cost_2007),
+p.costs_2008 = toInteger(row.total_cost_2008),
+p.costs_2009 = toInteger(row.total_cost_2009),
+p.costs_2010 = toInteger(row.total_cost_2010),
+p.costs_2011 = toInteger(row.total_cost_2011),
+p.costs_2012 = toInteger(row.total_cost_2012),
+p.costs_2013 = toInteger(row.total_cost_2013),
+p.costs_2014 = toInteger(row.total_cost_2014),
+p.costs_2015 = toInteger(row.total_cost_2015),
+p.costs_2016 = toInteger(row.total_cost_2016),
+p.costs_2017 = toInteger(row.total_cost_2017),
+p.costs_2018 = toInteger(row.total_cost_2018),
+p.costs_2019 = toInteger(row.total_cost_2019),
+p.costs_2020 = toInteger(row.total_cost_2020),
+p.costs_2021 = toInteger(row.total_cost_2021);
 
 
