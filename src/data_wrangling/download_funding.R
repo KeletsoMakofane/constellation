@@ -60,6 +60,7 @@ organization_project_edges_list <- list()
 project_subproject_edges_list <- list()
 
 for (i in seq_along(filenames_proj)){
+
   project_clean_pre <- read.csv(paste0(storage.data.directory, filenames_proj[i])) %>%
     dplyr::filter(CORE_PROJECT_NUM %in% project_paper_edges$id_project) 
   
@@ -105,8 +106,10 @@ for (i in seq_along(filenames_proj)){
                      total_cost = first_valid(total_cost), 
                      total_cost_subproject = first_valid(total_cost_subproject))
   
-  organization_nodes_list[[i]] <- project_clean %>%
-    dplyr::select(id_organization, name_organization, city_organization, city_country) %>%
+  
+  
+  organization_project_info <- project_clean %>%
+    dplyr::select(id_organization, name_organization, city_organization, city_country, id_project) %>%
     unique() %>%
     dplyr::group_by(id_organization) %>%
     dplyr::mutate(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), city_country = first_valid(city_country)) %>%
@@ -119,8 +122,14 @@ for (i in seq_along(filenames_proj)){
     dplyr::mutate(name_organization = ifelse(is.na(name_organization), id_organization, name_organization),
                   id_organization = ifelse(is.na(id_organization), digest::digest2int(as.character(id_organization)), id_organization))
   
+  organization_nodes_list[[i]] <- organization_project_info %>%
+    dplyr::select(id_organization, name_organization, city_organization) %>%
+    dplyr::group_by(id_organization) %>%
+    dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization) )
+  
   investigator_pre <- project_clean %>%
     dplyr::select(id_investigator, name_investigator, id_project) %>%
+    dplyr::mutate(id_investigator = str_remove(id_investigator, fixed("(contact)")), name_investigator = str_remove(name_investigator, fixed("(contact)"))) %>%
     dplyr::mutate(id_investigator = str_split(id_investigator, ";"),
                   name_investigator = str_split(name_investigator, ";"))
   
@@ -132,8 +141,10 @@ for (i in seq_along(filenames_proj)){
     bind_rows() %>%
     dplyr::filter(trimws(id_project) != "" & trimws(id_investigator) != "")
   
-  organization_project_edges_list[[i]] <- project_clean %>%
+  organization_project_edges_list[[i]] <- organization_project_info %>%
     dplyr::select(id_organization, id_project) %>%
+    drop_na() %>%
+    dplyr::filter(id_organization != "NA" & id_organization != "" & id_project != "NA" & id_project != "") %>%
     unique()
   
   project_subproject_edges_list[[i]] <- project_clean %>% 
