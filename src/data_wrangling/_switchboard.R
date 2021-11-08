@@ -1,4 +1,7 @@
 library(here)
+library(tidyverse)
+
+local <- str_detect(here(), "keletsomakofane/Documents/")
 
 if (local){
   root.working.directory <- "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/data_wrangling/"

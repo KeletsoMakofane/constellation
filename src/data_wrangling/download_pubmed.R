@@ -4,6 +4,7 @@ pubmed_baseline <- "https://ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 pubmed_update   <- "https://ftp.ncbi.nlm.nih.gov/pubmed/updatefiles/"
 
 storage.data.directory    <- paste0(root.data.directory, "data_pubmed_raw/")
+clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
 
 ############## BASELINE ###############
@@ -18,6 +19,7 @@ file_names <- httr::GET(pubmed_baseline) %>%
                   
 download_source       <- paste0(pubmed_baseline, file_names)
 download_destination  <- paste0(storage.data.directory, file_names)
+cleaning_destination  <- paste0(clean.data.directory, file_names)
 
 download_helper <- function(i){
   download.file(download_source[i], download_destination[i])
@@ -32,7 +34,13 @@ clean_helper <- function(i){
                       as.numeric() %>%
                       {. >= 2003}
   
-  if (!any(selected)) return(NULL) else file <- file[selected]
+  if (!any(selected)){
+    return(NULL) 
+    file.remove(file_names[i])
+    
+  } else {
+    file <- file[selected]
+  }
   
   id           <- xml2::xml_find_first(file, ".//PMID") %>% xml2::xml_text()
   title        <- xml2::xml_find_first(file, ".//ArticleTitle") %>% xml2::xml_text()
@@ -41,39 +49,97 @@ clean_helper <- function(i){
   journal_id      <- xml2::xml_find_first(file, ".//NlmUniqueID") %>% xml2::xml_text() 
   journal_title      <- xml2::xml_find_first(file, ".//Journal/Title") %>% xml2::xml_text() 
   
-  mesh_list    <- xml2::xml_find_first(file, ".//MeshHeadingList") 
+  try({
+    papers <- data.frame(id = id,
+                         title = title, 
+                         abstract = abstract, 
+                         journal_id = journal_id,
+                         journal_title = journal_title
+    ) 
+  })
   
-  mesh_desc_major        <- mesh_list %>%
-    xml2::xml_children() %>%
-    xml2::xml_find_first(".//DescriptorName[@MajorTopicYN='Y']")
+  mesh_list      <- xml2::xml_find_first(file, ".//MeshHeadingList") 
+  author_list    <- xml2::xml_find_first(file, ".//AuthorList") 
+  
+  add_pmid_to_grandkids <- function(i) {
+    mesh_list[i] %>%
+      xml2::xml_children() %>%
+      xml2::xml_children() %>%
+      xml2::xml_set_attr(., "pmid", id[i])
     
+    author_list[i] %>%
+      xml2::xml_children() %>%
+      xml2::xml_children() %>%
+      xml2::xml_set_attr(., "pmid", id[i])
+  }
   
+  seq_along(mesh_list) %>% lapply(add_pmid_to_grandkids)
   
-  mesh_desc_nonmajor        <- xml2::xml_find_first(file, ".//AbstractText") %>% xml2::xml_text() 
-  mesh_qual_major        <- xml2::xml_find_first(file, ".//AbstractText") %>% xml2::xml_text() 
-  mesh_qual_nonmajor        <- xml2::xml_find_first(file, ".//AbstractText") %>% xml2::xml_text() 
+  mesh_desc_major           <- xml2::xml_find_first(mesh_list, ".//DescriptorName[@MajorTopicYN='Y']") %>% xml2::xml_text()
+  mesh_desc_nonmajor        <- xml2::xml_find_first(mesh_list, ".//DescriptorName[@MajorTopicYN='N']") %>% xml2::xml_text() 
+  mesh_qual_major           <- xml2::xml_find_first(mesh_list, ".//QualifierName[@MajorTopicYN='Y']") %>% xml2::xml_text() 
+  mesh_qual_nonmajor        <- xml2::xml_find_first(mesh_list, ".//QualifierName[@MajorTopicYN='N']") %>% xml2::xml_text() 
+  mesh_pmid                 <- xml2::xml_find_first(mesh_list, ".//QualifierName[@MajorTopicYN='N']") %>% xml2::xml_attr("pmid") 
 
   
   try({
-    data.frame(id = id,
-               title = title, 
-               abstract = abstract, 
-               key_words = key_words,
-               )
+    mesh_terms <- data.frame(mesh_desc_major = mesh_desc_major,
+               mesh_desc_nonmajor = mesh_desc_nonmajor, 
+               mesh_qual_major = mesh_qual_major, 
+               mesh_qual_nonmajor = mesh_qual_nonmajor,
+               mesh_pmid = mesh_pmid
+               ) %>%
+      dplyr::group_by(mesh_pmid) %>%
+      summarize(mesh_desc_major = paste(mesh_desc_major, collapse = ";"),
+                mesh_desc_nonmajor = paste(mesh_desc_nonmajor, collapse = ";"),
+                mesh_qual_major = paste(mesh_qual_major, collapse = ";"),
+                mesh_qual_nonmajor = paste(mesh_qual_nonmajor, collapse = ";"))
+    
+    papers <- papers %>%
+      left_join(mesh_terms, by = c("id" = "mesh_pmid"))
     
   })
   
+  lastname <- xml2::xml_find_first(author_list, ".//LastName") %>% xml2::xml_text()
+  forename <- xml2::xml_find_first(author_list, ".//ForeName") %>% xml2::xml_text()
+  initials <- xml2::xml_find_first(author_list, ".//Initials") %>% xml2::xml_text()
+  author_pmid <- xml2::xml_find_first(author_list, ".//LastName") %>% xml2::xml_attr("pmid") 
+  
+  try({
+    authors    <- data.frame(lastname = lastname,
+                             forename = forename, 
+                             initials = initials, 
+                             author_pmid = author_pmid
+    ) %>%
+      drop_na()
+  })
+  
+
+    result <- list()
+    result$papers <- papers
+    result$authors <- authors
+    result
+    
+  
+
+  
+}
+
+helper_download_and_clean <- function(i){
+  
+  download_helper(i)
+  
+  try({
+    result <- clean_helper(i)
+  
+    if (!is.null(result)){
+      write.csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
+      write.csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
+      file.remove(download_destination[i])
+    }
+    
+  })
 }
 
 
-
-# baseline link
-# scan page for file links
-# paralell download links
-
-
-############## UPDATES ###############
-
-# baseline link
-# scan page for file links
-# paralell download links
+parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = parallel::detectCores() - 2)
