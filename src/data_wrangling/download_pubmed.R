@@ -128,18 +128,16 @@ clean_helper <- function(i){
 helper_download_and_clean <- function(i){
   
   download_helper(i)
+  result <- clean_helper(i)
   
   try({
-    result <- clean_helper(i)
-  
-    if (!is.null(result)){
       write.csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
       write.csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
       file.remove(download_destination[i])
-    }
+    
     
   })
 }
 
-
-parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = parallel::detectCores() - 2)
+parallel::mclapply(900:1000, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
+#parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = parallel::detectCores() - 2)

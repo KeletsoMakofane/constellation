@@ -12,3 +12,4 @@ if (local){
   root.data.directory 	 <- "~/shared_space/kem073_proj/_data/"
 }
 
+source(paste0(root.working.directory, "download_pubmed.R"), verbose = TRUE)
