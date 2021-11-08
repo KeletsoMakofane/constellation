@@ -9,7 +9,7 @@ if (local){
 
 } else {
   root.working.directory <- "~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/"
-  root.data.directory 	 <- "~/shared_space/kem073_proj/_data/"
+  root.data.directory 	 <- "~/shared_space/kem073_proj/_data/constellations/"
 }
 
 source(paste0(root.working.directory, "download_pubmed.R"), verbose = TRUE)
