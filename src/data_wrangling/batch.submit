@@ -7,7 +7,7 @@ Universe = vanilla
 # submission.
 #request_cpus = 10
 #request_memory = 40GB
-#request_disk = 5GB
+#request_disk = 40GB
 
 
 # Enter the path to the program you wish to run.
@@ -17,7 +17,7 @@ Executable = /usr/local/bin/R
 Arguments = --no-save --no-restore --slave
 
 # Specify the relative path to the input file (if any).
-input = helper.R
+input = switchboard.R
 
 # Specify where to output any results printed by your program.
 output = batch/redonetworkdata.$(Process)
