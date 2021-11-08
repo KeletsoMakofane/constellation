@@ -8,7 +8,7 @@ clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
 
 ############## BASELINE ###############
-file_names <- httr::GET(pubmed_baseline) %>%
+file_names_a <- httr::GET(pubmed_baseline) %>%
                   xml2::read_html() %>%
                   xml2::xml_contents() %>%
                   xml2::xml_children() %>%
