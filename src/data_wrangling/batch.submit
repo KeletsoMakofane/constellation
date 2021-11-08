@@ -23,10 +23,10 @@ input = switchboard.R
 output = batch/redonetworkdata.$(Process)
 
 # Specify where to save any errors returned by your program.
-error = batch/redonetworkdataerror.$(Process)
+error = batch/errors.$(Process)
 
 # Specify where to save the log file.
-Log = batch/redonetworkdatalog
+Log = batch/
 
 # Enter the number of processes to request. This should 
 # always be the last part of your submit file.

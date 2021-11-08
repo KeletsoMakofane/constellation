@@ -6,7 +6,7 @@ cd ~/shared_space/thesis_kem073/_gitrepos/constellations
 git fetch --all
 git reset --hard origin/main
 
-cd ~/shared_space/thesis_kem073/_gitrepos/ahdss_physfunction/_create_networks
+cd ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling
 
 condor_submit batch.submit
 logout
