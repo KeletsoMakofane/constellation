@@ -5,7 +5,7 @@ Universe = vanilla
 # The following arguments are _optional_. If included
 # they are used to specify the requirements for the
 # submission.
-#request_cpus = 10
+#request_cpus = 14
 #request_memory = 40GB
 #request_disk = 40GB
 
