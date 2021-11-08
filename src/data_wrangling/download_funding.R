@@ -95,7 +95,7 @@ for (i in seq_along(filenames_proj)){
                   name_investigator = PI_NAMEs,
                   core_project_number = CORE_PROJECT_NUM)
   
-  project_nodes_list[[i]] <- project_clean %>%
+  project_nodes <- project_clean %>%
                       dplyr::select(id_project, title, year, indirect_cost, direct_cost, total_cost, total_cost_subproject) %>%
     unique() %>%
     dplyr::group_by(id_project) %>%
@@ -104,7 +104,8 @@ for (i in seq_along(filenames_proj)){
                      indirect_cost = first_valid(indirect_cost),
                      direct_cost = first_valid(direct_cost),
                      total_cost = first_valid(total_cost), 
-                     total_cost_subproject = first_valid(total_cost_subproject))
+                     total_cost_subproject = first_valid(total_cost_subproject)) %>% 
+    mutate(across(contains("cost"), function(x) ifelse(is.na(x), 0, x)))
   
   
   
@@ -122,7 +123,7 @@ for (i in seq_along(filenames_proj)){
     dplyr::mutate(name_organization = ifelse(is.na(name_organization), id_organization, name_organization),
                   id_organization = ifelse(is.na(id_organization), digest::digest2int(as.character(id_organization)), id_organization))
   
-  organization_nodes_list[[i]] <- organization_project_info %>%
+  organization_nodes <- organization_project_info %>%
     dplyr::select(id_organization, name_organization, city_organization) %>%
     dplyr::group_by(id_organization) %>%
     dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization) )
@@ -133,45 +134,40 @@ for (i in seq_along(filenames_proj)){
     dplyr::mutate(id_investigator = str_split(id_investigator, ";"),
                   name_investigator = str_split(name_investigator, ";"))
   
-  investigator_nodes_list[[i]] <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, function(x, y) {data.frame(id_investigator = x, name_investigator = y)}) %>%
+  investigator_nodes <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, function(x, y) {data.frame(id_investigator = x, name_investigator = y)}) %>%
     bind_rows() %>%
     dplyr::filter(trimws(id_investigator) != "" & trimws(name_investigator) != "")
   
-  investigator_project_edges_list[[i]] <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, function(x, y) {data.frame(id_investigator = x, id_project = y)}) %>% 
+  investigator_project_edges <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, function(x, y) {data.frame(id_investigator = x, id_project = y)}) %>% 
     bind_rows() %>%
     dplyr::filter(trimws(id_project) != "" & trimws(id_investigator) != "")
   
-  organization_project_edges_list[[i]] <- organization_project_info %>%
+  organization_project_edges <- organization_project_info %>%
     dplyr::select(id_organization, id_project) %>%
     drop_na() %>%
     dplyr::filter(id_organization != "NA" & id_organization != "" & id_project != "NA" & id_project != "") %>%
     unique()
   
-  project_subproject_edges_list[[i]] <- project_clean %>% 
+  project_subproject_edges <- project_clean %>% 
     dplyr::select(id_project, core_project_number, year) %>%
     dplyr::mutate(id_subproject = paste(core_project_number, year, "0", sep = "_")) %>%
     unique() %>%
     dplyr::filter(id_project != id_subproject) %>%
     dplyr::select(id_project, id_subproject)
+  
+  
+  
+  write.csv(project_nodes, paste0(clean.data.directory, "project_nodes_", i, ".csv"))
+  write.csv(organization_nodes, paste0(clean.data.directory, "organization_nodes_", i, ".csv"))
+  write.csv(investigator_nodes, paste0(clean.data.directory, "investigator_nodes_", i, ".csv"))
+  
+  write.csv(investigator_project_edges, paste0(clean.data.directory, "investigator_project_edges_", i, ".csv"))
+  write.csv(organization_project_edges, paste0(clean.data.directory, "organization_project_edges_", i, ".csv"))
+  write.csv(project_subproject_edges, paste0(clean.data.directory, "project_subproject_edges_", i, ".csv"))
 
 }
 
 
-project_nodes <- project_nodes_list %>% bind_rows() %>% mutate(across(contains("cost"), function(x) ifelse(is.na(x), 0, x)))
-organization_nodes <- organization_nodes_list %>% bind_rows()
-investigator_nodes <- investigator_nodes_list %>% bind_rows()
-
-investigator_project_edges <- investigator_project_edges_list %>% bind_rows()
-organization_project_edges <- organization_project_edges_list %>% bind_rows()
-project_subproject_edges <- project_subproject_edges_list %>% bind_rows()
-
-write.csv(project_nodes, paste0(clean.data.directory, "project_nodes"))
-write.csv(organization_nodes, paste0(clean.data.directory, "organization_nodes"))
-write.csv(investigator_nodes, paste0(clean.data.directory, "investigator_nodes"))
-
-write.csv(investigator_project_edges, paste0(clean.data.directory, "investigator_project_edges"))
-write.csv(organization_project_edges, paste0(clean.data.directory, "organization_project_edges"))
-write.csv(project_subproject_edges, paste0(clean.data.directory, "project_subproject_edges"))
 
 
 

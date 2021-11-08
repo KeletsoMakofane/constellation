@@ -1,0 +1,26 @@
+# BATCH JOB
+
+git add .
+git commit -m "update just before batch run"
+git push
+
+
+ssh -i /Users/keletsomakofane/Documents/_security/rce_key kem073@rce.hmdc.harvard.edu
+
+
+cd ~/shared_space/thesis_kem073/_gitrepos/constellations
+git fetch --all
+git reset --hard origin/main
+
+cd ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling
+
+condor_submit batch.submit
+logout
+
+######## DOWNLOAD DATA ##########
+
+# Pubmed Clean
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/data_pubmed_clean/" "/Users/keletsomakofane/Documents/_data/constellations/"
+
+# Funding Clean
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/data_funding_clean/" "/Users/keletsomakofane/Documents/_data/constellations/"
