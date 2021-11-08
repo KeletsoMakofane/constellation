@@ -26,7 +26,7 @@ output = batch/redonetworkdata.$(Process)
 error = batch/errors.$(Process)
 
 # Specify where to save the log file.
-Log = batch/
+Log = batch/log
 
 # Enter the number of processes to request. This should 
 # always be the last part of your submit file.
