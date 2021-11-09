@@ -187,6 +187,7 @@ get_funding_data <- function(i){
 
 
 indices <- seq_along(filenames_proj)
+indices <- c(19, 20, 21, 54)
 
 for (i in indices){
   get_funding_data(i)
