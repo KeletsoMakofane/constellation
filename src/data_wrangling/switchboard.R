@@ -2,7 +2,7 @@ library(here)
 library(tidyverse)
 
 download_pubmed <- FALSE
-download_funding <- TRUE
+download_funding <- FALSE
 download_citations <- TRUE
 
 local <- str_detect(here(), "keletsomakofane/Documents/")
