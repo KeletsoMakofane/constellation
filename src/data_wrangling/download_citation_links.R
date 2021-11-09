@@ -61,9 +61,10 @@ add_destination_to_links <- function(node) {
   
 }
 
+#indices <- seq_along(pmid_list_chunks)
+indices <- 1075:length(pmid_list_chunks) #picking up where error stopped us
 
-
-for (i in seq_along(pmid_list_chunks)){
+for (i in indices){
   Sys.sleep(0.34)
   print(Sys.time())
   
@@ -73,20 +74,25 @@ for (i in seq_along(pmid_list_chunks)){
   
   payload <- paste(base_param, ids)
   
-  response <- httr::POST(base_url, body = payload)
-  
-  result <-   response %>%
-    xml2::read_xml() %>%
-    xml2::xml_find_all(".//LinkSet") 
-  
-  result %>% lapply(add_destination_to_links)
-  
-  
-  
-  from    <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_text()
-  to      <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_attr("destination")
-  
-  try({link_table <- data.frame(from = from, to = to)
-  write.csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", i, ".csv"))
-  print(paste(i, "out of", length(pmid_list_chunks)))})
+
+  try({
+    
+    response <- httr::POST(base_url, body = payload)
+    
+    result <-   response %>%
+      xml2::read_xml() %>%
+      xml2::xml_find_all(".//LinkSet") 
+    
+    result %>% lapply(add_destination_to_links)
+    
+    
+    
+    from    <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_text()
+    to      <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_attr("destination")
+    
+    link_table <- data.frame(from = from, to = to)
+    write.csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", i, ".csv"))
+    print(paste(i, "out of", length(pmid_list_chunks)))
+    
+  })
 }
