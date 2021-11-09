@@ -36,16 +36,17 @@ write.csv(project_paper_edges, paste0(clean.data.directory, "project_paper_edges
 ############ Nodes and Edges #################
 
 #indices <- seq_along(filenames_proj)
-indices <- 18:length(filenames_proj)   ## starting where error hit
 
-for (i in indices){
-  
+get_funding_data <- function(i){
   try({
     
     project_clean_pre <- read.csv(paste0(storage.data.directory, filenames_proj[i])) %>%
       dplyr::filter(CORE_PROJECT_NUM %in% project_paper_edges$id_project) 
     
-    if (dim(project_clean_pre)[1] == 0) return(NULL)
+    if (dim(project_clean_pre)[1] == 0){
+      print(paste(i, "of", length(filenames_proj), "is empty"))
+      return(NULL)
+    } 
     
     if (is.null(project_clean_pre$INDIRECT_COST_AMT)) project_clean_pre$INDIRECT_COST_AMT <- NA
     if (is.null(project_clean_pre$DIRECT_COST_AMT)) project_clean_pre$DIRECT_COST_AMT <- NA
@@ -156,9 +157,14 @@ for (i in indices){
     print(paste(i, "of", length(filenames_proj)))
     
   })
+}
 
 
 
+indices <- seq_along(filenames_proj)
+
+for (i in indices){
+  get_funding_data(i)
 }
 
 
