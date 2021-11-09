@@ -89,7 +89,7 @@ const Footer = () => {
 
                                     <StyledMessageBox>
                                         CREW<br/><br/>
-                                        Led by Keletso Makofane with Brittney Butler, Tori Cowger, Justin Feldman, Jourdyn Lawrence, and Marie Plaisime. Supported by the Harvard FXB Center for Health and Human Rights.
+                                        Led by Keletso Makofane with Brittney Butler, Tori Cowger, Justin Feldman, Jourdyn Lawrence, and Marie Plaisime. Supported by the Harvard FXB Center for Health and Human Rights. Courtesy of the U.S. National Library of Medicine.
                                     </StyledMessageBox>
 
                                 </StyledPopup>
