@@ -140,6 +140,13 @@ for (i in seq_along(filenames_proj)){
   write.csv(investigator_project_edges, paste0(clean.data.directory, "investigator_project_edges_", i, ".csv"))
   write.csv(organization_project_edges, paste0(clean.data.directory, "organization_project_edges_", i, ".csv"))
   write.csv(project_subproject_edges, paste0(clean.data.directory, "project_subproject_edges_", i, ".csv"))
+  
+  rm(project_nodes)
+  rm(organization_nodes)
+  rm(investigator_nodes)
+  rm(investigator_project_edges)
+  rm(organization_project_edges)
+  rm(project_subproject_edges)
 
 }
 
