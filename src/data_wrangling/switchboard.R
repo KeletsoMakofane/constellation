@@ -2,8 +2,9 @@ library(here)
 library(tidyverse)
 
 download_pubmed <- FALSE
-download_funding <- TRUE
+download_funding <- FALSE
 download_citations <- FALSE
+clean_pubmed <- TRUE
 
 local <- str_detect(here(), "keletsomakofane/Documents/")
 
@@ -19,4 +20,6 @@ if (local){
 if (download_pubmed) source(paste0(root.working.directory, "download_pubmed.R"), verbose = TRUE)
 if (download_funding) source(paste0(root.working.directory, "download_funding.R"), verbose = TRUE)
 if (download_citations) source(paste0(root.working.directory, "download_citation_links.R"), verbose = TRUE)
+
+if (clean_pubmed) source(paste0(root.working.directory, "clean_pubmed.R"), verbose = TRUE)
 
