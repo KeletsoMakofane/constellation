@@ -40,9 +40,11 @@ download_destination  <- c(download_destination_base, download_destination_base)
 cleaning_destination  <- c(cleaning_destination_base, cleaning_destination_upd)
   
   
-download_helper <- function(i){
+download_helper_articles <- function(i){
   download.file(download_source[i], download_destination[i])
 }
+
+
 
 clean_helper <- function(i){
   file <- xml2::read_xml(download_destination[i]) %>%
@@ -146,7 +148,7 @@ clean_helper <- function(i){
 
 helper_download_and_clean <- function(i){
   
-  download_helper(i)
+  download_helper_articles(i)
   result <- clean_helper(i)
   
   try({
@@ -158,5 +160,6 @@ helper_download_and_clean <- function(i){
   })
 }
 
-#parallel::mclapply(900:1000, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
-parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = 10)
+if (local) parallel::mclapply(900:950, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
+if (!local) parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = 10)
+

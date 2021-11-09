@@ -1,33 +1,12 @@
 
-
-
-### Scan files
-  # get project
-  # get links
-
-#### Open papers data
-
-### Iterate over linkfiles
-  # open links
-  # create project-paper edges
-
-### Iterate over project files
-  # open project
-  # get projects in edge list
-  # extract 
-    # project nodes
-    # organization nodes
-    # investigator nodes
-    # organization-project edges
-    # investigator-project edges
-    # project-subproject edges
-## Functions ##
+############ Functions #################
 first_valid <- function(vec){
   if (all(is.na(vec))) return(NA)
   
   vec[!is.na(vec)][1]
 }
 
+############ Directories #################
 storage.data.directory    <- paste0(root.data.directory, "data_funding_raw/")
 clean.data.directory      <- paste0(root.data.directory, "data_funding_clean/")
 
@@ -41,6 +20,8 @@ filenames_link <- filenames %>%
 
 link_file_list <- list()
 
+############ Projec-Paper Links #################
+
 for (i in seq_along(filenames_link)){
   link_file_list[[i]] <- read.csv(paste0(storage.data.directory, filenames_link[i])) %>%
                               dplyr::rename(id_paper = PMID, id_project = PROJECT_NUMBER) 
@@ -51,13 +32,8 @@ project_paper_edges <- link_file_list %>%
 
 write.csv(project_paper_edges, paste0(clean.data.directory, "project_paper_edges.csv") )
 
-project_file_list <- list()
-project_nodes_list <- list()
-organization_nodes_list <- list()
-investigator_nodes_list <- list()
-investigator_project_edges_list <- list()
-organization_project_edges_list <- list()
-project_subproject_edges_list <- list()
+
+############ Nodes and Edges #################
 
 for (i in seq_along(filenames_proj)){
 
