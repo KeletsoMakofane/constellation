@@ -118,11 +118,9 @@ get_funding_data <- function(i){
     
     
     extract_name_id_investigators <- function(x, y){
-      x <- x %>%
-        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      x <- x %>% trimws() %>% {.[. != ""]} 
       
-      y <- y %>%
-        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      y <- y %>% trimws() %>% {.[. != ""]} 
       
       if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, name_investigator = y))
       
@@ -134,11 +132,9 @@ get_funding_data <- function(i){
       dplyr::filter(trimws(id_investigator) != "" & trimws(name_investigator) != "")
     
     extract_investigator_project <- function(x, y){
-      x <- x %>%
-        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      x <-  x %>% trimws() %>% {.[. != ""]}
       
-      y <- y %>%
-        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      y <- y %>% trimws() %>% {.[. != ""]}
       
       if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, id_project = y))
       
@@ -187,7 +183,7 @@ get_funding_data <- function(i){
 
 
 indices <- seq_along(filenames_proj)
-indices <- c(19, 20, 21, 54)
+indices <- c(19, 20, 21)
 
 for (i in indices){
   get_funding_data(i)
