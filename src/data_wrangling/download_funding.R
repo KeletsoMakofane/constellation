@@ -116,11 +116,36 @@ get_funding_data <- function(i){
       dplyr::mutate(id_investigator = str_split(id_investigator, ";"),
                     name_investigator = str_split(name_investigator, ";"))
     
-    investigator_nodes <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, function(x, y) {data.frame(id_investigator = x, name_investigator = y)}) %>%
+    
+    extract_name_id_investigators <- function(x, y){
+      x <- x %>%
+        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      
+      y <- y %>%
+        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      
+      if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, name_investigator = y))
+      
+      return(NULL)
+    }
+    
+    investigator_nodes <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, extract_name_id_investigators) %>%
       bind_rows() %>%
       dplyr::filter(trimws(id_investigator) != "" & trimws(name_investigator) != "")
     
-    investigator_project_edges <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, function(x, y) {data.frame(id_investigator = x, id_project = y)}) %>% 
+    extract_investigator_project <- function(x, y){
+      x <- x %>%
+        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      
+      y <- y %>%
+        lapply(function(x) x %>% trimws() %>% {.[. != ""]} )
+      
+      if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, id_project = y))
+      
+      return(NULL)
+    }
+    
+    investigator_project_edges <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, extract_investigator_project) %>% 
       bind_rows() %>%
       dplyr::filter(trimws(id_project) != "" & trimws(id_investigator) != "")
     
