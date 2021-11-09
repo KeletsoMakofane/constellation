@@ -127,7 +127,9 @@ get_funding_data <- function(i){
       return(NULL)
     }
     
-    investigator_nodes <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, extract_name_id_investigators) %>%
+    extract_name_id_investigators_possibly <- purrr::possibly(extract_name_id_investigators)
+    
+    investigator_nodes <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$name_investigator, extract_name_id_investigators_possibly) %>%
       bind_rows() %>%
       dplyr::filter(trimws(id_investigator) != "" & trimws(name_investigator) != "")
     
@@ -141,7 +143,9 @@ get_funding_data <- function(i){
       return(NULL)
     }
     
-    investigator_project_edges <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, extract_investigator_project) %>% 
+    extract_investigator_project_possibly <- purrr::possibly(extract_investigator_project)
+    
+    investigator_project_edges <- purrr::map2(investigator_pre$id_investigator,  investigator_pre$id_project, extract_investigator_project_possibly) %>% 
       bind_rows() %>%
       dplyr::filter(trimws(id_project) != "" & trimws(id_investigator) != "")
     
