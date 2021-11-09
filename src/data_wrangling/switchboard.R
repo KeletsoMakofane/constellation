@@ -4,8 +4,8 @@ library(tidyverse)
 download_pubmed <- FALSE
 download_funding <- FALSE
 download_citations <- FALSE
-clean_pubmed <- TRUE
-clean_funding <- FALSE
+clean_pubmed <- FALSE
+clean_funding <- TRUE
 
 local <- str_detect(here(), "keletsomakofane/Documents/")
 
