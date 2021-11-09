@@ -17,6 +17,8 @@ cd ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling
 condor_submit batch.submit
 logout
 
+
+conda: Rscript ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/switchboard.R
 ######## DOWNLOAD DATA ##########
 
 # Pubmed Clean
