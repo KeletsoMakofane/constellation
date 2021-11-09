@@ -147,6 +147,8 @@ for (i in seq_along(filenames_proj)){
   rm(investigator_project_edges)
   rm(organization_project_edges)
   rm(project_subproject_edges)
+  
+  print(paste(i, "of", length(filenames_proj)))
 
 }
 
