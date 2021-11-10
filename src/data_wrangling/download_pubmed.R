@@ -152,7 +152,7 @@ helper_download_and_clean <- function(i){
   result <- clean_helper(i)
   
   try({
-      write.csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
+      write.csv(result$papers,  paste0(clean.data.directory, "articles_", i, ".csv"))
       write.csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
       file.remove(download_destination[i])
     

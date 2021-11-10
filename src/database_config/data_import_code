@@ -6,6 +6,18 @@ CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
 ON (a:Author)
 ASSERT a.name IS UNIQUE;
 
+CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+ON (a:Investigator)
+ASSERT a.id IS UNIQUE;
+
+CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+ON (a:Project)
+ASSERT a.id IS UNIQUE;
+
+CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+ON (a:Organization)
+ASSERT a.id IS UNIQUE;
+
 CREATE FULLTEXT INDEX NameFulltextIndex FOR (n:Author) ON EACH [n.name];
 
 CREATE INDEX race_index IF NOT EXISTS
@@ -23,6 +35,8 @@ ON (p.covid);
 CREATE INDEX year_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.year);
+
+
 
 ############ Papers
 
@@ -47,6 +61,40 @@ ON CREATE SET
 m.forename = row.forename,
 m.lastname = row.lastname,
 m.initials = row.initials;
+
+############ Investigators
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///investigator_nodes.csv' as row
+MERGE (m:Investigator {id: row.id_investigator})
+ON CREATE SET
+m.name = row.name_investigator;
+
+############ Projects
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///project_nodes.csv' as row
+MERGE (m:Project {id: row.id_project})
+ON CREATE SET
+m.title = row.title,
+m.year = toInteger(row.year),
+m.indirect_cost = toInteger(row.indirect_cost),
+m.direct_cost = toInteger(row.direct_cost),
+m.total_cost = toInteger(row.total_cost),
+m.total_cost_subproject = toInteger(row.total_cost_subproject);
+
+
+############ Organizations
+
+:auto using periodic commit
+LOAD CSV WITH HEADERS FROM
+'file:///organization_nodes.csv' as row
+MERGE (m:Organization {id: row.id_organization})
+ON CREATE SET
+m.name = row.name_organization,
+m.city = row.city_organization;
 
 ############ Authors and Papers
 

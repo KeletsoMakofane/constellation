@@ -29,3 +29,9 @@ scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc
 
 # Funding Clean
 scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/data_funding_clean/" "/Users/keletsomakofane/Documents/_data/constellations/"
+
+# Import
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/" "/Users/keletsomakofane/Documents/_data/constellations/"
+
+
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"

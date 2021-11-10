@@ -7,7 +7,7 @@ filenames_authors <- filenames %>%
   paste0(clean.data.directory, .)
 
 filenames_papers <- filenames %>%
-  {.[str_detect(., "papers_")]}  %>%
+  {.[str_detect(., "articles_")]}  %>%
   paste0(clean.data.directory, .)
 
 if (file.exists(paste0(final.data.directory, "authors.csv"))) unlink(paste0(final.data.directory, "authors.csv"), recursive = FALSE)
@@ -21,13 +21,13 @@ for (i in seq_along(filenames_authors)){
     })
 }
 
-if (file.exists(paste0(final.data.directory, "papers.csv"))) unlink(paste0(final.data.directory, "papers.csv"), recursive = FALSE)
+if (file.exists(paste0(final.data.directory, "articles.csv"))) unlink(paste0(final.data.directory, "articles.csv"), recursive = FALSE)
 
 for (i in seq_along(filenames_papers)){
   try({
     read.csv(filenames_papers[i], header = TRUE) %>%
-      write.table(paste0(final.data.directory, "papers.csv"), sep = ",", append = TRUE, col.names=!file.exists(paste0(final.data.directory, "papers.csv")), row.names = FALSE)
+      write.table(paste0(final.data.directory, "articles.csv"), sep = ",", append = TRUE, col.names=!file.exists(paste0(final.data.directory, "articles.csv")), row.names = FALSE)
   
-    print(paste(i, "of", length(filenames_papers)), "papers")
+    print(paste(i, "of", length(filenames_papers)), "articles")
     })
 }
