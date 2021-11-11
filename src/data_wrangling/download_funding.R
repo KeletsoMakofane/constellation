@@ -23,14 +23,15 @@ link_file_list <- list()
 ############ Projec-Paper Links #################
 
 for (i in seq_along(filenames_link)){
-  link_file_list[[i]] <- read.csv(paste0(storage.data.directory, filenames_link[i])) %>%
+  link_file_list[[i]] <- read_csv(paste0(storage.data.directory, filenames_link[i])) %>%
                               dplyr::rename(id_paper = PMID, id_project = PROJECT_NUMBER) 
 }
 
 project_paper_edges <- link_file_list %>%
-  dplyr::bind_rows() 
+  dplyr::bind_rows() %>%
+  unique()
 
-write.csv(project_paper_edges, paste0(clean.data.directory, "project_paper_edges.csv") )
+write_csv(project_paper_edges, paste0(clean.data.directory, "project_paper_edges.csv") )
 
 
 ############ Nodes and Edges #################
@@ -164,13 +165,13 @@ get_funding_data <- function(i){
     
     
     
-    write.csv(project_nodes, paste0(clean.data.directory, "project_nodes_", i, ".csv"))
-    write.csv(organization_nodes, paste0(clean.data.directory, "organization_nodes_", i, ".csv"))
-    write.csv(investigator_nodes, paste0(clean.data.directory, "investigator_nodes_", i, ".csv"))
+    write_csv(project_nodes, paste0(clean.data.directory, "project_nodes_", i, ".csv"))
+    write_csv(organization_nodes, paste0(clean.data.directory, "organization_nodes_", i, ".csv"))
+    write_csv(investigator_nodes, paste0(clean.data.directory, "investigator_nodes_", i, ".csv"))
     
-    write.csv(investigator_project_edges, paste0(clean.data.directory, "investigator_project_edges_", i, ".csv"))
-    write.csv(organization_project_edges, paste0(clean.data.directory, "organization_project_edges_", i, ".csv"))
-    write.csv(project_subproject_edges, paste0(clean.data.directory, "project_subproject_edges_", i, ".csv"))
+    write_csv(investigator_project_edges, paste0(clean.data.directory, "investigator_project_edges_", i, ".csv"))
+    write_csv(organization_project_edges, paste0(clean.data.directory, "organization_project_edges_", i, ".csv"))
+    write_csv(project_subproject_edges, paste0(clean.data.directory, "project_subproject_edges_", i, ".csv"))
     
     rm(project_nodes)
     rm(organization_nodes)
@@ -187,6 +188,7 @@ get_funding_data <- function(i){
 
 
 indices <- seq_along(filenames_proj)
+
 
 for (i in indices){
   get_funding_data(i)

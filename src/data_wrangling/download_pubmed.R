@@ -7,7 +7,7 @@ storage.data.directory    <- paste0(root.data.directory, "data_pubmed_raw/")
 clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
 
-############## BASELINE ###############
+############## GET FILENAMES ###############
 file_names_base <- httr::GET(pubmed_baseline) %>%
                   xml2::read_html() %>%
                   xml2::xml_contents() %>%
@@ -127,17 +127,23 @@ clean_helper <- function(i){
   author_pmid <- xml2::xml_find_first(author_list, ".//LastName") %>% xml2::xml_attr("pmid") 
   
   try({
-    authors    <- data.frame(lastname = lastname,
+    author_paper_edges    <- data.frame(lastname = lastname,
                              forename = forename, 
                              initials = initials, 
-                             author_pmid = author_pmid
-    ) %>%
-      drop_na()
+                             id_paper = author_pmid) %>%
+      drop_na() %>%
+      mutate(name_author = paste(forename, lastname)) %>%
+      dplyr::select(id_paper, name_author)
+    
+    authors <- author_paper_edges %>%
+      dplyr::select(-id_paper) %>%
+      unique()
   })
   
 
     result <- list()
     result$papers <- papers
+    result$author_paper_edges <- author_paper_edges
     result$authors <- authors
     result
     
@@ -152,8 +158,9 @@ helper_download_and_clean <- function(i){
   result <- clean_helper(i)
   
   try({
-      write.csv(result$papers,  paste0(clean.data.directory, "articles_", i, ".csv"))
-      write.csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
+      write_csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
+      write_csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
+      write_csv(result$author_paper_edges,  paste0(clean.data.directory, "author_paper_edges_", i, ".csv"))
       file.remove(download_destination[i])
     
     

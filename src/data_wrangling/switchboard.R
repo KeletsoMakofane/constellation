@@ -1,11 +1,15 @@
 library(here)
 library(tidyverse)
 
-download_pubmed <- FALSE
-download_funding <- FALSE
-download_citations <- FALSE
-clean_pubmed <- TRUE
-clean_funding <- FALSE
+download_pubmed     <- TRUE
+clean_pubmed        <- TRUE
+
+download_funding    <- FALSE
+clean_funding       <- FALSE
+
+download_citations  <- FALSE
+
+
 
 local <- str_detect(here(), "keletsomakofane/Documents/")
 
