@@ -157,6 +157,8 @@ helper_download_and_clean <- function(i){
   download_helper_articles(i)
   result <- clean_helper(i)
   
+  if (is_null(result)) return(NULL)
+  
   try({
       write_csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
       write_csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
@@ -165,6 +167,8 @@ helper_download_and_clean <- function(i){
     
     
   })
+  
+  rm(result)
 }
 
 if (local) parallel::mclapply(900:950, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
