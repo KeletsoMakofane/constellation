@@ -12,13 +12,13 @@ cd ~/shared_space/thesis_kem073/_gitrepos/constellations
 git fetch --all
 git reset --hard origin/main
 
-cd ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling
+cd ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/switchboard.R
 
 condor_submit batch.submit
 logout
 
 
-
+conda activate r_env2
 
 
 conda: Rscript ~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/switchboard.R
