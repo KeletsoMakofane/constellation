@@ -1,11 +1,11 @@
 library(here)
 library(tidyverse)
 
-download_pubmed     <- FALSE
-clean_pubmed        <- FALSE
+download_pubmed     <- TRUE
+clean_pubmed        <- TRUE
 
-download_funding    <- TRUE
-clean_funding       <- TRUE
+download_funding    <- FALSE
+clean_funding       <- FALSE
 
 download_citations  <- FALSE
 
