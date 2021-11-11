@@ -168,5 +168,5 @@ helper_download_and_clean <- function(i){
 }
 
 if (local) parallel::mclapply(900:950, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
-if (!local) parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = 10)
+if (!local) parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = 8)
 
