@@ -7,7 +7,7 @@
 
 
 filenames <- list.files(paste0(root.data.directory, "data_pubmed_clean/")) %>%
-  {.[str_detect(., "articles_")]} %>%
+  {.[str_detect(., "papers_")]} %>%
   paste0(root.data.directory, "data_pubmed_clean/", .)
 
 
@@ -15,7 +15,7 @@ pmid_list <- list()
   
 for (i in seq_along(filenames)) {
   pmid_list[[i]] <- read.csv(filenames[i]) %>%
-    dplyr::pull(id_paper)
+    dplyr::pull(id)
 }
 
 pmid_list_chunks_pre <- list()
@@ -62,7 +62,7 @@ add_destination_to_links <- function(node) {
 }
 
 #indices <- seq_along(pmid_list_chunks)
-indices <- 1075:length(pmid_list_chunks) #picking up where error stopped us
+indices <- seq_along(pmid_list_chunks) #picking up where error stopped us
 
 for (i in indices){
   Sys.sleep(0.34)

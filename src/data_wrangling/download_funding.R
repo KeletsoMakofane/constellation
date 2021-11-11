@@ -22,6 +22,8 @@ link_file_list <- list()
 
 ############ Projec-Paper Links #################
 
+#authors <- read_csv(paste0(root.data.directory, "import/papers.csv"))
+
 for (i in seq_along(filenames_link)){
   link_file_list[[i]] <- read_csv(paste0(storage.data.directory, filenames_link[i])) %>%
                               dplyr::rename(id_paper = PMID, id_project = PROJECT_NUMBER) 
@@ -188,7 +190,7 @@ get_funding_data <- function(i){
 
 
 indices <- seq_along(filenames_proj)
-
+if (local) indices <- 1:10
 
 for (i in indices){
   get_funding_data(i)

@@ -6,434 +6,138 @@ CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
 ON (a:Author)
 ASSERT a.name IS UNIQUE;
 
-CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+CREATE CONSTRAINT UniqueInvestigatorIdConstraint IF NOT EXISTS
 ON (a:Investigator)
 ASSERT a.id IS UNIQUE;
 
-CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+CREATE CONSTRAINT UniqueProjectIdConstraint IF NOT EXISTS
 ON (a:Project)
 ASSERT a.id IS UNIQUE;
 
-CREATE CONSTRAINT UniqueAuthorIdConstraint IF NOT EXISTS
+CREATE CONSTRAINT UniqueOrganizationIdConstraint IF NOT EXISTS
 ON (a:Organization)
 ASSERT a.id IS UNIQUE;
 
 CREATE FULLTEXT INDEX NameFulltextIndex IF NOT EXISTS
 FOR (n:Author) ON EACH [n.name];
 
-CREATE INDEX race_index IF NOT EXISTS
-FOR (p:Paper)
-ON (p.race);
-
-CREATE INDEX racism_index IF NOT EXISTS
-FOR (p:Paper)
-ON (p.racism);
-
-CREATE INDEX covid_index IF NOT EXISTS
-FOR (p:Paper)
-ON (p.covid);
-
 CREATE INDEX year_index IF NOT EXISTS
 FOR (p:Paper)
 ON (p.year);
+
+CREATE INDEX project_key_index IF NOT EXISTS
+FOR (p:Paper)
+ON (p.project_key);
 
 
 
 ############ Papers
 
-:auto LOAD CSV FROM
-'file:///papers_1.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_2.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_3.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_4.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_5.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_6.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-
-:auto LOAD CSV FROM
-'file:///papers_7.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_8.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_9.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_10.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_11.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_12.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_13.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_14.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_15.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_16.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_17.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_18.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_19.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-:auto LOAD CSV FROM
-'file:///papers_20.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Paper {id: row[1]})
-ON CREATE SET
-m.title = row[2],
-m.abstract = row[3],
-m.journal_id = row[4],
-m.journal_title = row[5],
-m.mesh_desc_major = row[6],
-m.mesh_desc_nonmajor = row[7],
-m.mesh_qual_major = row[8],
-m.mesh_qual_major = row[9],
-m.mesh_qual_nonmajor = row[10];
-
-
+LOAD CSV WITH HEADERS FROM
+'file:///papers.csv' as row
+MERGE (m:Paper {id: row.id})
+SET
+m.title = row.title,
+m.abstract = row.abstract,
+m.journal_id = row.journal_id,
+m.journal_title = row.journal_title,
+m.mesh_desc_major = row.mesh_desc_major,
+m.mesh_desc_nonmajor = row.mesh_desc_nonmajor,
+m.mesh_qual_major = row.mesh_qual_major,
+m.mesh_qual_major = row.mesh_qual_major,
+m.mesh_qual_nonmajor = row.mesh_qual_nonmajor ;
 
 
 
 ############ Authors
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///authors.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Author {name: row[1]});
+MERGE (m:Author {name: row.name_author});
 
 ############ Investigators
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///investigator_nodes.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Investigator {id: row[1]})
+MERGE (m:Investigator {id: row.id_investigator})
 ON CREATE SET
-m.name = row[2];
+m.name = row.name_investigator;
 
 ############ Projects
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///project_nodes.csv' as row
-WITH row WHERE row[1] IS NOT NULL
-MERGE (m:Project {id: row[1]})
+MERGE (m:Project {id: row.id_project})
 ON CREATE SET
-m.title = row[2],
-m.year = toInteger(row[3]),
-m.indirect_cost = toInteger(row[4]),
-m.direct_cost = toInteger(row[5]),
-m.total_cost = toInteger(row[6]),
-m.total_cost_subproject = toInteger(row[7]);
+m.title = row.title,
+m.year = toInteger(row.year),
+m.indirect_cost = toInteger(row.indirect_cost),
+m.direct_cost = toInteger(row.direct_cost),
+m.total_cost = toInteger(row.total_cost),
+m.total_cost_subproject = toInteger(row.subproject);
 
 
 ############ Organizations
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///organization_nodes.csv' as row
-MERGE (m:Organization {id: toInteger(row[1])}
-ON CREATE SET
-m.name = row[2],
-m.city = row[3];
+MERGE (m:Organization {id: row.id_organization})
+SET
+m.name = row.name_organization,
+m.city = row.city_organization;
 
 ############ Authors and Papers
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///author_paper_edges.csv' as row
-MATCH (author:Author) WHERE toLower(author.name) = toLower(row[2])
-MATCH (paper:Paper) WHERE toInteger(paper.id) = toInteger(row[1])
+MATCH (author:Author) WHERE author.name = row.name_author
+MATCH (paper:Paper) WHERE paper.id = row.id_paper 
 MERGE (author)-[:WROTE]->(paper);
 
 ############ Investigators and Projects
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///investigator_project_edges.csv' as row
-MATCH (i:Investigator) WHERE toInteger(i.id) = toInteger(row[1])
-MATCH (p:Project) WHERE toInteger(p.id) = toInteger(row[2])
+MATCH (i:Investigator) WHERE i.id = row.id_investigator
+MATCH (p:Project) WHERE p.id = row.id_project
 MERGE (i)-[:LED]->(p);
 
 ############ Organizations and Projects
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///organization_project_edges.csv' as row
-MATCH (o:Organization) WHERE toInteger(o.id) = toInteger(row[1])
-MATCH (p:Project) WHERE toInteger(p.id) = toInteger(row[2])
+MATCH (o:Organization) WHERE o.id = row.id_organization
+MATCH (p:Project) WHERE p.id = row.id_project
 MERGE (o)-[:HOSTED]->(p);
 
 ############ Project and Paper
 
+
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///project_paper_edges.csv' as row
-MATCH (o:Project ) WHERE toLower(o.name) = toLower(row[2])
-MATCH (p:Paper ) WHERE toInteger(p.id) = toInteger(row[1])
-MERGE (o)-[:SUPPORTED]->(p);
+MATCH (p:Paper) WHERE p.id = row.id_paper
+SET p.project_key = row.id_project + '_' + p.year + '_0';
+
+MATCH (p:Project), (q:paper)
+WHERE p.id = q.project_key
+MERGE (p)-[:SUPPORTED]->(q);
 
 
 ############ Project and SubProject
 
 :auto using periodic commit
-LOAD CSV FROM
+LOAD CSV WITH HEADERS FROM
 'file:///project_subproject_edges.csv' as row
-MATCH (o:Project) WHERE toInteger(o.id) = toInteger(row[2])
-MATCH (p:Project ) WHERE toInteger(p.id) = toInteger(row[1])
+MATCH (o:Project) WHERE o.id = row.id_project
+MATCH (p:Project ) WHERE p.id = row.id_subproject
 MERGE (o)-[:BEGAT]->(p);
 
 
@@ -443,9 +147,9 @@ MERGE (o)-[:BEGAT]->(p);
 
 :auto using periodic commit
 LOAD CSV WITH HEADERS FROM
-'file:///citations.csv' as row
-MATCH (from:Paper {id: toInteger(row.from)})
-MATCH (to:Paper {id: toInteger(row.to)})
+'file:///citation_edges.csv' as row
+MATCH (from:Paper {id: row.id_paper_from})
+MATCH (to:Paper {id: row.id_paper_to})
 MERGE (from)-[:CITED]->(to);
 
 ############ Coauthoring Communities

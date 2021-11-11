@@ -123,10 +123,10 @@ clean_helper <- function(i){
     
   })
   
-  lastname <- xml2::xml_find_first(author_list, ".//LastName") %>% xml2::xml_text()
-  forename <- xml2::xml_find_first(author_list, ".//ForeName") %>% xml2::xml_text()
-  initials <- xml2::xml_find_first(author_list, ".//Initials") %>% xml2::xml_text()
-  author_pmid <- xml2::xml_find_first(author_list, ".//LastName") %>% xml2::xml_attr("pmid") 
+  lastname    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_text()
+  forename    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//ForeName") %>% xml2::xml_text()
+  initials    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//Initials") %>% xml2::xml_text()
+  author_pmid <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_attr("pmid") 
   
   try({
     author_paper_edges    <- data.frame(lastname = lastname,
@@ -162,8 +162,8 @@ helper_download_and_clean <- function(i){
   if (is_null(result)) return(NULL)
   
   try({
-      write_csv(result$papers,  paste0(clean.data.directory, "papers_", i, ".csv"))
-      write_csv(result$authors,  paste0(clean.data.directory, "authors_", i, ".csv"))
+      write_csv(result$papers,              paste0(clean.data.directory, "papers_", i, ".csv"))
+      write_csv(result$authors,             paste0(clean.data.directory, "authors_", i, ".csv"))
       write_csv(result$author_paper_edges,  paste0(clean.data.directory, "author_paper_edges_", i, ".csv"))
       file.remove(download_destination[i])
     
@@ -173,6 +173,6 @@ helper_download_and_clean <- function(i){
   rm(result)
 }
 
-if (local) parallel::mclapply(900:950, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
+if (local) parallel::mclapply(900:901, helper_download_and_clean, mc.cores = parallel::detectCores() - 4)
 if (!local) parallel::mclapply(seq_along(file_names), helper_download_and_clean, mc.cores = 8)
 

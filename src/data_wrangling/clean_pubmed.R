@@ -14,6 +14,10 @@ filenames_author_paper_edges <- filenames %>%
   {.[str_detect(., "author_paper_edges_")]}  %>%
   paste0(clean.data.directory, .)
 
+filenames_citation_edges <- filenames %>%
+  {.[str_detect(., "citation_edges_")]}  %>%
+  paste0(clean.data.directory, .)
+
 if (file.exists(paste0(final.data.directory, "authors.csv"))) unlink(paste0(final.data.directory, "authors.csv"), recursive = FALSE)
 
 for (i in seq_along(filenames_authors)){
@@ -27,7 +31,7 @@ for (i in seq_along(filenames_authors)){
       dplyr::mutate(name_author = trimws(name_author)) %>%
       dplyr::filter(!is.na(name_author) & name_author != "")
     
-      write_csv(a, paste0(final.data.directory, "authors.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "authors.csv")))
+      write_csv(a, paste0(final.data.directory, "authors.csv"), append = (i != 1), col_names=(i == 1))
       
       rm(a)
       
@@ -35,12 +39,11 @@ for (i in seq_along(filenames_authors)){
     })
 }
 
-for (counter in c(0)) if (file.exists(paste0(final.data.directory, "papers_", counter, ".csv"))) unlink(paste0(final.data.directory, "papers_", counter, ".csv"), recursive = FALSE)
-
-counter <- 0
+if (file.exists(paste0(final.data.directory, "papers.csv"))) unlink(paste0(final.data.directory, "papers.csv"), recursive = FALSE)
+#counter <- 0
 for (i in seq_along(filenames_papers)){
-  counter <- (i %% 20) + 1
-  counter <- 0
+  #counter <- (i %% 20) + 1
+  #counter <- 0
   
   
   try({
@@ -53,8 +56,9 @@ for (i in seq_along(filenames_papers)){
       dplyr::mutate(id = as.numeric(id)) %>%
       dplyr::filter(!is.na(id))
     
-      write_csv(b, paste0(final.data.directory, "papers_", counter, ".csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "papers_", counter, ".csv")))
-  
+      #write_csv(b, paste0(final.data.directory, "papers_", counter, ".csv"), append = (i != 1), col_names=!file.exists(paste0(final.data.directory, "papers_", counter, ".csv")))
+      write_csv(b, paste0(final.data.directory, "papers.csv"), append = (i != 1), col_names=(i == 1))
+    
       rm(b)
       
     print(paste(i, "of", length(filenames_papers), "papers"))
@@ -74,13 +78,36 @@ for (i in seq_along(filenames_author_paper_edges)){
       dplyr::mutate(id_paper = as.numeric(id_paper), name_author = trimws(as.character(name_author))) %>%
       dplyr::filter(!is.na(id_paper) & !is.na(name_author) & name_author != "")
     
-    write_csv(b, paste0(final.data.directory, "author_paper_edges.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "author_paper_edges.csv")))
+    write_csv(b, paste0(final.data.directory, "author_paper_edges.csv"), append = (i != 1), col_names= (i == 1))
     
     rm(b)
     
     print(paste(i, "of", length(filenames_author_paper_edges), "author_paper_edges"))
   })
 }
+
+if (file.exists(paste0(final.data.directory, "citation_edges.csv"))) unlink(paste0(final.data.directory, "citation_edges.csv"), recursive = FALSE)
+
+for (i in seq_along(filenames_citation_edges)){
+  try({
+    b <- read_csv(filenames_citation_edges[i]) %>%
+      dplyr::mutate(across(everything(), as.character)) %>%
+      dplyr::mutate(across(everything(), function(x) str_replace_all(x, '"', '|'))) %>%
+      dplyr::mutate(across(everything(), function(x) str_replace_all(x, "'", "|"))) %>%
+      dplyr::mutate(across(everything(), function(x) str_replace_all(x, ",", ";"))) %>%
+      dplyr::mutate(across(everything(), function(x) ifelse(is.na(x), "", x))) %>%
+      dplyr::transmute(id_paper_from = from, id_paper_to = to) %>%
+      dplyr::mutate(id_paper_from = as.numeric(id_paper_from), id_paper_to = as.numeric(id_paper_to)) %>%
+      dplyr::filter(!is.na(id_paper_from) & !is.na(id_paper_to))
+    
+    write_csv(b, paste0(final.data.directory, "citation_edges.csv"), append = (i != 1), col_names=(i == 1))
+    
+    rm(b)
+    
+    print(paste(i, "of", length(filenames_author_paper_edges), "author_paper_edges"))
+  })
+}
+
 
 
 

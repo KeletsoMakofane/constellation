@@ -46,7 +46,7 @@ for (i in seq_along(filenames_investigator_nodes)){
       dplyr::mutate(id_investigator = as.numeric(id_investigator), name_investigator = trimws(as.character(name_investigator))) %>%
       dplyr::filter(!is.na(id_investigator) & !is.na(name_investigator) & name_investigator != "")
       
-    write_csv(a, paste0(final.data.directory, "investigator_nodes.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "investigator_nodes.csv")))
+    write_csv(a, paste0(final.data.directory, "investigator_nodes.csv"), append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_investigator_nodes), "investigator_nodes"))
   })
@@ -66,7 +66,7 @@ for (i in seq_along(filenames_investigator_project_edges)){
       dplyr::mutate(id_investigator = as.numeric(id_investigator), id_project = trimws(as.character(id_project))) %>%
       dplyr::filter(!is.na(id_investigator) & !is.na(id_investigator) & id_investigator != "")
       
-    write_csv(a, paste0(final.data.directory, "investigator_project_edges.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "investigator_project_edges.csv")))
+    write_csv(a, paste0(final.data.directory, "investigator_project_edges.csv"), append = (i != 1), col_names=!file.exists(paste0(final.data.directory, "investigator_project_edges.csv")))
     
     print(paste(i, "of", length(filenames_investigator_project_edges), "investigator_project_edges"))
   })
@@ -85,7 +85,7 @@ for (i in seq_along(filenames_organization_nodes)){
       dplyr::mutate(id_organization = as.numeric(id_organization)) %>%
       dplyr::filter(!is.na(id_organization))
     
-    write_csv(a, paste0(final.data.directory, "organization_nodes.csv"),  append = TRUE, col_names=!file.exists(paste0(final.data.directory, "organization_nodes.csv")))
+    write_csv(a, paste0(final.data.directory, "organization_nodes.csv"),  append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_organization_nodes), "organization_nodes"))
   })
@@ -104,7 +104,7 @@ for (i in seq_along(filenames_organization_project_edges)){
       dplyr::mutate(id_organization = as.numeric(id_organization), id_project = trimws(as.character(id_project))) %>%
       dplyr::filter(!is.na(id_organization) & !is.na(id_project) & id_project != "")
     
-      write_csv(a, paste0(final.data.directory, "organization_project_edges.csv"),  append = TRUE, col_names=!file.exists(paste0(final.data.directory, "organization_project_edges.csv")))
+      write_csv(a, paste0(final.data.directory, "organization_project_edges.csv"),  append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_organization_project_edges), "organization_project_edges"))
   })
@@ -124,7 +124,7 @@ for (i in seq_along(filenames_project_nodes)){
       dplyr::mutate(id_project = as.character(trimws(id_project))) %>%
       dplyr::filter(!is.na(id_project) & id_project != "")
       
-      write_csv(a, paste0(final.data.directory, "project_nodes.csv"),  append = TRUE, col_names=!file.exists(paste0(final.data.directory, "project_nodes.csv")))
+      write_csv(a, paste0(final.data.directory, "project_nodes.csv"),  append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_project_nodes), "project_nodes"))
   })
@@ -141,10 +141,10 @@ for (i in seq_along(filenames_project_paper_edges)){
       dplyr::mutate(across(everything(), function(x) str_replace_all(x, "'", "|"))) %>%
       dplyr::mutate(across(everything(), function(x) str_replace_all(x, ",", ";"))) %>%
       dplyr::mutate(across(everything(), function(x) ifelse(is.na(x), "", x))) %>%
-      dplyr::mutate(id_paper = as.numeric(id_papers), id_project = trimws(as.character(id_project))) %>%
+      dplyr::mutate(id_paper = as.numeric(id_paper), id_project = trimws(as.character(id_project))) %>%
       dplyr::filter(!is.na(id_paper) & !is.na(id_project) & id_project != "")
     
-      write_csv(a, paste0(final.data.directory, "project_paper_edges.csv"),  append = TRUE, col_names=!file.exists(paste0(final.data.directory, "project_paper_edges.csv")))
+      write_csv(a, paste0(final.data.directory, "project_paper_edges.csv"),  append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_project_paper_edges), "project_paper_edges"))
   })
@@ -165,7 +165,7 @@ for (i in seq_along(filenames_project_subproject_edges)){
       dplyr::mutate(id_project = trimws(as.character(id_project)), id_subproject = trimws(as.character(id_subproject))) %>%
       dplyr::filter(!is.na(id_project) & !is.na(id_subproject))
     
-      write_csv(a, paste0(final.data.directory, "project_subproject_edges.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "project_subproject_edges.csv")))
+      write_csv(a, paste0(final.data.directory, "project_subproject_edges.csv"), append = (i != 1), col_names= (i == 1))
     
     print(paste(i, "of", length(filenames_project_subproject_edges), "project_subproject_edges"))
   })
@@ -183,7 +183,7 @@ try({
     dplyr::mutate(across(everything(), function(x) str_replace_all(x, ",", ";"))) %>%
     dplyr::mutate(across(everything(), function(x) ifelse(is.na(x), "", x))) %>%
     dplyr::mutate(id_paper = as.numeric(id_paper), id_project = trimws(as.character(id_project))) %>%
-    dplyr::filter(!is.na(id_paper) & !is.na(id_project) & id_project != "")
+    dplyr::filter(!is.na(id_paper) & !is.na(id_project) & id_project != "") 
   
   write_csv(a, paste0(final.data.directory, "project_paper_edges.csv"))
   
