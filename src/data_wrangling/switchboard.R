@@ -2,11 +2,11 @@ library(here)
 library(tidyverse)
 
 # WHICH SCRIPTS
-download_pubmed     <- TRUE
-clean_pubmed        <- TRUE
+download_pubmed     <- FALSE
+clean_pubmed        <- FALSE
 
-download_funding    <- FALSE
-clean_funding       <- FALSE
+download_funding    <- TRUE
+clean_funding       <- TRUE
 
 download_citations  <- FALSE
 
