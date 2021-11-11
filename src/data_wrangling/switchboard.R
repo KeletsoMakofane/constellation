@@ -1,6 +1,7 @@
 library(here)
 library(tidyverse)
 
+# WHICH SCRIPTS
 download_pubmed     <- TRUE
 clean_pubmed        <- TRUE
 
@@ -9,7 +10,8 @@ clean_funding       <- FALSE
 
 download_citations  <- FALSE
 
-
+# BASELINE OR DAILY UPDATE
+update_operation <- TRUE
 
 local <- str_detect(here(), "keletsomakofane/Documents/")
 

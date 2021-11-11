@@ -33,9 +33,11 @@ for (i in seq_along(filenames_authors)){
     })
 }
 
-if (file.exists(paste0(final.data.directory, "papers.csv"))) unlink(paste0(final.data.directory, "papers.csv"), recursive = FALSE)
+for (counter in 1:20) if (file.exists(paste0(final.data.directory, "papers_", counter, ".csv"))) unlink(paste0(final.data.directory, "papers_", counter, ".csv"), recursive = FALSE)
 
+counter <- 0
 for (i in seq_along(filenames_papers)){
+  counter <- (i %% 20) + 1
   try({
     b <- read_csv(filenames_papers[i]) %>%
       dplyr::mutate(across(everything(), as.character)) %>%
@@ -44,7 +46,7 @@ for (i in seq_along(filenames_papers)){
       dplyr::mutate(across(everything(), function(x) str_replace_all(x, ",", ";"))) %>%
       dplyr::mutate(across(everything(), function(x) ifelse(is.na(x), "", x)))
     
-      write_csv(b, paste0(final.data.directory, "papers.csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "papers.csv")))
+      write_csv(b, paste0(final.data.directory, "papers_", counter, ".csv"), append = TRUE, col_names=!file.exists(paste0(final.data.directory, "papers_", counter, ".csv")))
   
       rm(b)
       

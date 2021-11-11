@@ -69,13 +69,15 @@ clean_helper <- function(i){
   key_words    <- xml2::xml_find_first(file, ".//KeyWordList") %>% xml2::xml_text() 
   journal_id      <- xml2::xml_find_first(file, ".//NlmUniqueID") %>% xml2::xml_text() 
   journal_title      <- xml2::xml_find_first(file, ".//Journal/Title") %>% xml2::xml_text() 
+  year         <- xml2::xml_find_first(file, ".//PubDate") %>% xml2::xml_text() %>% str_extract("[:digit:][:digit:][:digit:][:digit:]")
   
   try({
     papers <- data.frame(id = id,
                          title = title, 
                          abstract = abstract, 
                          journal_id = journal_id,
-                         journal_title = journal_title
+                         journal_title = journal_title,
+                         year = year
     ) 
   })
   
