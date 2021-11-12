@@ -2,8 +2,16 @@
 ## 1 COPY FILES TO IMPORT FOLDER 
 ##################################################################################
 
+#### AHEM DATABASE
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@54.89.144.124:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.89.144.124
+sudo rm -r /var/lib/neo4j/import
+sudo cp -r ~/import /var/lib/neo4j/
+cd ~/
+sudo rm -r import
+
 #### UPLOAD DATA to AWS
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_gitrepos/constellations/import/" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
 ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
 sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/

@@ -38,3 +38,10 @@ scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/U
 
 # SSH AWS
 ssh -i /Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem  ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
+
+
+c("hello
+
+there", "hi") %>% str_replace_all("[:blank:]", " ") %>% str_replace_all("[:space:]", " ") 
+
+

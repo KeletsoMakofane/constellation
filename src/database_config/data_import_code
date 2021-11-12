@@ -1,3 +1,25 @@
+bin/neo4j-admin import 
+
+--database=live_database 
+
+--nodes=import/papers_headers.csv,import/papers.csv 
+--nodes=import/authors_headers.csv,import/authors.csv 
+--nodes=import/investigator_nodes_headers.csv,import/investigator_nodes.csv 
+--nodes=import/project_nodes_headers.csv,import/project_nodes.csv
+--nodes=import/organization_nodes_headers.csv,import/organization_nodes.csv
+
+--relationships=import/author_paper_edges_headers.csv,import/author_paper_edges.csv
+--relationships=import/investigator_project_edges_headers.csv,import/investigator_project_edges.csv
+--relationships=import/organization_project_edges_headers.csv,import/organization_project_edges.csv
+--relationships=import/project_subproject_edges_headers.csv,import/project_subproject_edges.csv
+--relationships=import/citation_edges_headers.csv,import/citation_edges.csv
+
+
+sudo neo4j-admin import --database=new --nodes=/var/lib/neo4j/import/papers_headers.csv,/var/lib/neo4j/import/papers.csv --nodes=/var/lib/neo4j/import/authors_headers.csv,/var/lib/neo4j/import/authors.csv --nodes=/var/lib/neo4j/import/investigator_nodes_headers.csv,/var/lib/neo4j/import/investigator_nodes.csv --nodes=/var/lib/neo4j/import/project_nodes_headers.csv,/var/lib/neo4j/import/project_nodes.csv --nodes=/var/lib/neo4j/import/organization_nodes_headers.csv,/var/lib/neo4j/import/organization_nodes.csv --relationships=/var/lib/neo4j/import/author_paper_edges_headers.csv,/var/lib/neo4j/import/author_paper_edges.csv --relationships=/var/lib/neo4j/import/investigator_project_edges_headers.csv,/var/lib/neo4j/import/investigator_project_edges.csv --relationships=/var/lib/neo4j/import/organization_project_edges_headers.csv,/var/lib/neo4j/import/organization_project_edges.csv --relationships=/var/lib/neo4j/import/project_subproject_edges_headers.csv,/var/lib/neo4j/import/project_subproject_edges.csv --relationships=/var/lib/neo4j/import/citation_edges_headers.csv,/var/lib/neo4j/import/citation_edges.csv
+
+
+
+
 CREATE CONSTRAINT UniquePaperIdConstraint IF NOT EXISTS
 ON (p:Paper)
 ASSERT p.id IS UNIQUE;
