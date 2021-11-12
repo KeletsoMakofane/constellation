@@ -237,15 +237,5 @@ try({
 })
 
 
-organizations_nodes           <- data.table::fread(paste0(final.data.directory, "organization_nodes.csv"))
-organizations_nodes_unique    <- unique(organizations_nodes)
-data.table::fwrite(organizations_nodes_unique, paste0(final.data.directory, "organization_nodes.csv"), col.names = FALSE)
 
-investigators_nodes           <- data.table::fread(paste0(final.data.directory, "investigator_nodes.csv"))
-investigators_nodes_unique    <- unique(investigators_nodes)
-data.table::fwrite(investigators_nodes_unique, paste0(final.data.directory, "investigator_nodes.csv"), col.names = FALSE)
-
-project_nodes           <- data.table::fread(paste0(final.data.directory, "project_nodes.csv"))
-project_nodes_unique    <- unique(project_nodes)
-data.table::fwrite(project_nodes_unique, paste0(final.data.directory, "project_nodes.csv"), col.names = FALSE)
 
