@@ -141,10 +141,10 @@ for (i in seq_along(filenames_citation_edges)){
 
 papers_nodes           <- data.table::fread(paste0(final.data.directory, "papers.csv"))
 papers_nodes_unique    <- unique(papers_nodes)
-data.table::fwrite(papers_nodes_unique, paste0(final.data.directory, "papers.csv"))
+data.table::fwrite(papers_nodes_unique, paste0(final.data.directory, "papers.csv"), col.names = FALSE)
 
 authors_nodes           <- data.table::fread(paste0(final.data.directory, "authors.csv"))
 authors_nodes_unique    <- unique(authors_nodes)
-data.table::fwrite(authors_nodes_unique, paste0(final.data.directory, "authors.csv"))
+data.table::fwrite(authors_nodes_unique, paste0(final.data.directory, "authors.csv"), col.names = FALSE)
 
 
