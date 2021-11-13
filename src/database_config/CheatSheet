@@ -3,12 +3,17 @@
 ##################################################################################
 
 #### AHEM DATABASE
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@54.89.144.124:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.89.144.124
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@54.162.111.126:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.162.111.126
 sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/
 cd ~/
 sudo rm -r import
+
+
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/papers.csv" "ubuntu@54.162.111.126:~/import/"
+
+
 
 #### UPLOAD DATA to AWS
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
@@ -46,6 +51,11 @@ data:         /var/lib/neo4j/data
 certificates: /var/lib/neo4j/certificates
 licenses:     /var/lib/neo4j/licenses
 run:          /var/run/neo4j
+
+sudo systemctl stop neo4j
+sudo systemctl start neo4j
+
+unsupported.dbms.tx_log.fail_on_corrupted_log_files=false
 
 dbms.connector.http.enabled=$dbms_connector_http_enabled
 dbms.connector.http.advertised_address=$dbms_connector_http_advertised_address
@@ -91,10 +101,10 @@ dbms.ssl.policy.https.client_auth=$dbms_ssl_policy_https_client_auth
 
 LOAD CSV WITH HEADERS FROM
 'file:///papers.csv' as row
-MERGE (m:Paper {id: toInteger(row.id)})
+MERGE (m:Paper {id: row[1]})
 ON CREATE SET
-m.title = row.title,
-m.year = toInteger(row.year);
+m.title = row[2],
+m.year = toInteger(row[3]);
 
 LOAD CSV WITH HEADERS FROM
 'file:///authors.csv' as row

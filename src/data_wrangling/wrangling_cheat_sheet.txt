@@ -33,11 +33,13 @@ scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc
 # Import
 scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/" "/Users/keletsomakofane/Documents/_data/constellations/"
 
+
+
 # To server
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import" "ubuntu@34.234.76.107:~/"
 
 # SSH AWS
-ssh -i /Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem  ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
+ssh -i /Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem  ubuntu@ec2-18-204-226-206.compute-1.amazonaws.com
 
 
 c("hello

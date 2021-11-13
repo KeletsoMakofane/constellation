@@ -42,28 +42,22 @@ if (local){
   
   
   investigator_project_edges           <- data.table::fread(paste0(final.data.directory, "investigator_project_edges.csv"), header = FALSE)[V1 %in% investigators_nodes$V1][V2 %in% project_nodes$V1]
-  investigator_project_edges_unique    <- unique(investigator_project_edges)
-  data.table::fwrite(investigator_project_edges_unique, paste0(final.data.directory, "investigator_project_edges.csv"), col.names = FALSE)
+  data.table::fwrite(investigator_project_edges, paste0(final.data.directory, "investigator_project_edges.csv"), col.names = FALSE)
   
   organization_project_edges           <- data.table::fread(paste0(final.data.directory, "organization_project_edges.csv"), header = FALSE)[V1 %in% organizations_nodes$V1][V2 %in% project_nodes$V1]
-  organization_project_edges_unique    <- unique(organization_project_edges)
-  data.table::fwrite(organization_project_edges_unique, paste0(final.data.directory, "organization_project_edges.csv"), col.names = FALSE)
+  data.table::fwrite(organization_project_edges, paste0(final.data.directory, "organization_project_edges.csv"), col.names = FALSE)
   
   project_paper_edges           <- data.table::fread(paste0(final.data.directory, "project_paper_edges.csv"), header = FALSE)[V1 %in% papers_nodes$V1][, .(V2 = first(V2), V3 = first(V3)), by=list(V1)]
-  project_paper_edges_unique    <- unique(project_paper_edges)
-  data.table::fwrite(project_paper_edges_unique, paste0(final.data.directory, "project_paper_edges.csv"), col.names = FALSE)
+  data.table::fwrite(project_paper_edges, paste0(final.data.directory, "project_paper_edges.csv"), col.names = FALSE)
   
   project_subproject_edges           <- data.table::fread(paste0(final.data.directory, "project_subproject_edges.csv"), header = FALSE)[V1 %in% project_nodes$V1][V2 %in% project_nodes$V1]
-  project_subproject_edges_unique    <- unique(project_subproject_edges)
-  data.table::fwrite(project_subproject_edges_unique, paste0(final.data.directory, "project_subproject_edges.csv"), col.names = FALSE)
+  data.table::fwrite(project_subproject_edges, paste0(final.data.directory, "project_subproject_edges.csv"), col.names = FALSE)
   
   author_paper_edges           <- data.table::fread(paste0(final.data.directory, "author_paper_edges.csv"), header = FALSE)[V1 %in% papers_nodes$V1][V2 %in% authors_nodes$V1]
-  author_paper_edges_unique    <- unique(author_paper_edges)
-  data.table::fwrite(author_paper_edges_unique, paste0(final.data.directory, "author_paper_edges.csv"), col.names = FALSE)
+  data.table::fwrite(author_paper_edges, paste0(final.data.directory, "author_paper_edges.csv"), col.names = FALSE)
   
   citation_edges           <- data.table::fread(paste0(final.data.directory, "citation_edges.csv"), header = FALSE)[V1 %in% papers_nodes$V1][V2 %in% papers_nodes$V1]
-  citation_edges_unique    <- unique(citation_edges)
-  data.table::fwrite(citation_edges_unique, paste0(final.data.directory, "citation_edges.csv"), col.names = FALSE)
+  data.table::fwrite(citation_edges, paste0(final.data.directory, "citation_edges.csv"), col.names = FALSE)
   
   
 
