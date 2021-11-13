@@ -56,7 +56,7 @@ import { TopicRestriction } from "@components";
                         thickness: 'Collaborations',
                     }
                 },
-                 initial_cypher: `MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) WHERE (:Author {name: '${searchname}'})-[:WROTE]-(p) AND toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH a, b, collect(p.title) as titles, count(p.title) as collaborations CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel  WHERE collaborations >= ${collabweight} and a.name < b.name RETURN a, b, rel;`
+                 initial_cypher: `MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) WITH a, b, collect(p.title) as titles, count(p.title) as collaborations CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel WHERE collaborations >= ${collabweight} and a.name < b.name RETURN a, b, rel;`
             };
             const vis = new Neovis(config);
             vis.render();

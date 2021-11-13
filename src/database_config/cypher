@@ -1,8 +1,20 @@
-MATCH (a:Author {name: 'Nancy Krieger' })
-CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships
-WITH nodes, relationships
-MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE (${topicRestriction}) AND c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear})
-WITH c, d, collect(p.title) as titles, count(p) as collaborations
-WHERE collaborations >= ${collabweight}
-CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name
-RETURN c, d, collab;
+OFFICIAL AUTHOR NETWORK
+MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
+    WHERE (:Author {name: '${searchname}'})-[:WROTE]-(p)
+        AND toInteger(${startYear}) <= p.year <= toInteger(${stopYear})
+        AND ${TopicRestriction(topicChosen)}
+WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
+    CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
+        WHERE collaborations >= ${collabweight} and a.name < b.name
+    RETURN a, b, rel;
+
+MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
+    WHERE (:Author {name: 'Nancy Krieger'})-[:WROTE]-(p)
+        AND 2015 <= p.year <= 2021
+WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
+    CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
+        WHERE collaborations >= 5 and a.name < b.name
+    RETURN a, b, rel;
+
+UPDATED AUTHOR NETWORK
+MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) WITH a, b, collect(p.title) as titles, count(p.title) as collaborations CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel WHERE collaborations >= ${collabweight} and a.name < b.name RETURN a, b, rel;
