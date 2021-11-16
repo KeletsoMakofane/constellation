@@ -17,7 +17,7 @@ Executable = /usr/local/bin/R
 Arguments = --no-save --no-restore --slave
 
 # Specify the relative path to the input file (if any).
-input = switchboard.R
+input = 0_switchboard.R
 
 # Specify where to output any results printed by your program.
 output = batch/redonetworkdata.$(Process)
