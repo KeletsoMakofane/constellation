@@ -74,6 +74,18 @@ CREATE INDEX total_cost_subproject_index IF NOT EXISTS
 FOR (p:Project)
 ON (p.total_cost_subproject);
 
+CREATE INDEX journal_title__index IF NOT EXISTS
+FOR (p:Project)
+ON (p.journal_title);
+
+CREATE INDEX organization_name_index IF NOT EXISTS
+FOR (o:Organization)
+ON (o.name);
+
+CREATE INDEX investigator_name_index IF NOT EXISTS
+FOR (i:Investigator)
+ON (i.name);
+
 
 CREATE FULLTEXT INDEX NameFulltextIndex IF NOT EXISTS
 FOR (n:Author) ON EACH [n.name];
@@ -241,8 +253,8 @@ MERGE (p)-[:SUPPORTED]->(q);
 LOAD CSV WITH HEADERS FROM
 'file:///project_paper_edges.csv' as row
 MATCH (p:Paper) WHERE p.id = row.id_paper
-MATCH (q:Project) WHERE q.id = row.id_project + '_' + p.year + '_0';
-
+MATCH (q:Project) WHERE q.id = row.id_project + '_' + p.year + '_0'
+MERGE (q)-[:SUPPORTED]->(p);
 
 ############ Project and SubProject
 

@@ -34,7 +34,7 @@ const StyledForm = styled.div`
             const urlWithProtocol = Credentials.NEODRIVER_PROTOCOL + Credentials.NEO4J_URI;
             const driver = neo4j.driver( urlWithProtocol , neo4j.auth.basic(Credentials.NEO4J_USER, Credentials.NEO4J_PASSWORD), {encrypted: 'ENCRYPTION_ON', trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"});
             const session = driver.session();
-            const pulled = await session.run(`CALL db.index.fulltext.queryNodes("NameFulltextIndex", $searchName) YIELD node, score RETURN node.name as name LIMIT 5`, {searchName: searchString});
+            const pulled = await session.run(`CALL db.index.fulltext.queryNodes("InvestigatorNametextIndex", $searchName) YIELD node, score RETURN node.name as name LIMIT 5`, {searchName: searchString});
 
 
 

@@ -37,26 +37,57 @@ import { TopicRestriction } from "@components";
                 encrypted: enc,
                 trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES",
                 labels: {
-                    "Author": {
+                    "vInvestigator": {
                         caption: "name",
-                        size: "auth_pagerank",
-                        community: 'community',
-                        title_properties: ["name"],
+                        size: "total_funding",
+                        title_properties: ["name", "latest_org", "total_funding", "grants"],
                         shape: "diamond",
+                        community: "orgid",
                         font: {
                             color: "blue",
-                            size: 11,
+                            size: 10,
                             background: "black"
                         }
                     }
                 },
                 relationships: {
-                    "CO_AUTH": {
+                    "CO_SUPPORT": {
                         caption: false,
-                        thickness: 'Collaborations',
+                        thickness: 'weight',
                     }
                 },
-                 initial_cypher: `MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) WITH a, b, collect(p.title) as titles, count(p.title) as collaborations CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel WHERE collaborations >= ${collabweight} and a.name < b.name RETURN a, b, rel;`
+                 initial_cypher: `
+MATCH (:Investigator {name: "${searchname}"})-[:LED]-(:Project)-[:SUPPORTED]-(paper: Paper)
+                            WHERE toInteger(${startYear}) <= paper.year <= toInteger(${stopYear})
+                    MATCH (paper: Paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+                    MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+                    MATCH (investigators)-[:LED]-(projects:Project)-[:HOSTED]-(organizations: Organization)
+                    
+                    
+                    WITH investigators, projects, allpapers, organizations
+                                            ORDER BY projects.year DESC
+                        WITH distinct investigators.name as names,
+                                count(allpapers) as npub,
+                                sum(distinct projects.total_cost) as total_funding,
+                                collect(distinct projects.year + ". " + projects.title + ": " + projects.total_cost) as grants,
+                                collect(distinct organizations.name) as orgs, 
+                                collect(distinct id(organizations)) as orgid
+
+                    
+                        WITH apoc.create.vNode(["vInvestigator"], {name: names, npub: npub, total_funding: total_funding, grants: grants, orgs: orgs, latest_org: orgs[0], orgid: orgid[0]}) as prenewNodes
+                        WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+                    
+                    MATCH (:Investigator {name: "${searchname}"})-[:LED]-(:Project)-[:SUPPORTED]-(paper: Paper)
+                    MATCH (paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+                    MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+                    MATCH (a:Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(allpapers)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
+                        WHERE a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+                    
+                    WITH a, b, count(allpapers) as weight, newNodes
+                    RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], "CO_SUPPORT", {weight: weight}, newNodes[b.name]);
+                    
+
+`
             };
             const vis = new Neovis(config);
             vis.render();

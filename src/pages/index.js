@@ -13,7 +13,7 @@ const NEOVIS_ENCRYPTION = Credentials.NEOVIS_ENCRYPTION;
 
 
 // Defaults
-const DEF_NAME = 'Keletso Makofane';
+const DEF_NAME = 'BERKMAN; LISA F';
 const DEF_START = '2015';
 const DEF_STOP = '2021';
 const DEF_TOPIC = 'all'

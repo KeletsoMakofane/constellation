@@ -35,8 +35,8 @@ dbms.security.auth_enabled=true
 # calculated based on available system resources.
 # Uncomment these lines to set specific initial and maximum
 # heap size.
-dbms.memory.heap.initial_size=20g
-dbms.memory.heap.max_size=20g
+dbms.memory.heap.initial_size=15g
+dbms.memory.heap.max_size=15g
 
 # The amount of memory to use for mapping the store files, in bytes (or
 # kilobytes with the 'k' suffix, megabytes with 'm' and gigabytes with 'g').
@@ -46,7 +46,7 @@ dbms.memory.heap.max_size=20g
 # rest for the page cache.
 # The default page cache memory assumes the machine is dedicated to running
 # Neo4j, and is heuristically set to 50% of RAM minus the max Java heap size.
-#dbms.memory.pagecache.size=2g
+#dbms.memory.pagecache.size=10g
 
 # Transaction state location. It is recommended to use ON_HEAP.
 dbms.tx_state.memory_allocation=ON_HEAP
@@ -65,7 +65,7 @@ dbms.default_listen_address=0.0.0.0
 # The address at which this server can be reached by its clients. This may be the server's IP address or DNS name, or
 # it may be the address of a reverse proxy which sits in front of the server. This setting may be overridden for
 # individual connectors below.
-dbms.default_advertised_address=graph.keletsomakofane.com
+dbms.default_advertised_address=graph.constellationsproject.app
 
 # You can also choose a specific advertised hostname or IP address, and
 # configure an advertised port for each connector, by setting their
@@ -74,7 +74,7 @@ dbms.default_advertised_address=graph.keletsomakofane.com
 # Bolt connector
 dbms.connector.bolt.enabled=true
 dbms.connector.bolt.tls_level=REQUIRED
-dbms.connector.bolt.advertised_address=graph.keletsomakofane.com:7687
+dbms.connector.bolt.advertised_address=graph.constellationsproject.app:7687
 dbms.ssl.policy.bolt.base_directory=/var/lib/neo4j/certificates/bolt
 dbms.ssl.policy.bolt.client_auth=NONE
 dbms.ssl.policy.bolt.trust_all=$dbms_ssl_policy_bolt_trust_all
@@ -86,7 +86,7 @@ dbms.connector.http.listen_address=$dbms_connector_http_listen_address
 
 # HTTPS Connector. There can be zero or one HTTPS connectors.
 dbms.connector.https.enabled=true
-dbms.connector.https.advertised_address=graph.keletsomakofane.com:7473
+dbms.connector.https.advertised_address=graph.constellationsproject.app:7473
 dbms.connector.https.listen_address=0.0.0.0:7473
 dbms.ssl.policy.https.base_directory=/var/lib/neo4j/certificates/https
 dbms.ssl.policy.https.client_auth=NONE
@@ -145,8 +145,8 @@ dbms.connector.bolt.listen_address=0.0.0.0:7687
 #
 # Mandatory setting
 
-dbms.ssl.policy.https.enabled=true
-dbms.ssl.policy.bolt.enabled=true
+dbms.ssl.policy.https.enabled=$dbms_ssl_policy_https_enabled
+dbms.ssl.policy.bolt.enabled=$dbms_ssl_policy_bolt_enabled
 
 #dbms.ssl.policy.default.base_directory=certificates/default
 
@@ -476,7 +476,7 @@ dbms.security.allow_csv_import_from_file_urls=$dbms_security_allow_csv_import_fr
 
 # Only allow read operations from this Neo4j instance. This mode still requires
 # write access to the directory for lock purposes.
-dbms.read_only=false
+#dbms.read_only=false
 
 # Comma separated list of JAX-RS packages containing JAX-RS resources, one
 # package name for each mountpoint. The listed package names will be loaded
@@ -564,4 +564,3 @@ dbms.windows_service_name=neo4j
 #********************************************************************
 # Tag images in UDC data as coming from the Amazon AMI source.
 dbms.jvm.additional=-Dunsupported.dbms.udc.source=amazon-ami-$dbms_mode
-

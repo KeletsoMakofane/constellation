@@ -8,36 +8,36 @@ clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
 
 ############## GET FILENAMES ###############
-file_names_base <- httr::GET(pubmed_baseline) %>%
-                  xml2::read_html() %>%
-                  xml2::xml_contents() %>%
-                  xml2::xml_children() %>%
-                  xml2::xml_find_all("//a") %>%
-                  xml2::xml_text() %>%
-                  {.[str_detect(., "xml")]} %>%
-                  {.[!str_detect(., "md5")]}
+file_names_base           <- httr::GET(pubmed_baseline) %>%
+                             xml2::read_html() %>%
+                             xml2::xml_contents() %>%
+                             xml2::xml_children() %>%
+                             xml2::xml_find_all("//a") %>%
+                             xml2::xml_text() %>%
+                             {.[str_detect(., "xml")]} %>%
+                             {.[!str_detect(., "md5")]}
                   
-download_source_base       <- paste0(pubmed_baseline, file_names_base)
+download_source_base       <- paste0(pubmed_baseline,        file_names_base)
 download_destination_base  <- paste0(storage.data.directory, file_names_base)
-cleaning_destination_base  <- paste0(clean.data.directory, file_names_base)
+cleaning_destination_base  <- paste0(clean.data.directory,   file_names_base)
 
-file_names_upd <- httr::GET(pubmed_update) %>%
-  xml2::read_html() %>%
-  xml2::xml_contents() %>%
-  xml2::xml_children() %>%
-  xml2::xml_find_all("//a") %>%
-  xml2::xml_text() %>%
-  {.[str_detect(., "xml")]} %>%
-  {.[!str_detect(., "md5")]}
+file_names_upd             <- httr::GET(pubmed_update) %>%
+                              xml2::read_html() %>%
+                              xml2::xml_contents() %>%
+                              xml2::xml_children() %>%
+                              xml2::xml_find_all("//a") %>%
+                              xml2::xml_text() %>%
+                              {.[str_detect(., "xml")]} %>%
+                              {.[!str_detect(., "md5")]}
 
-download_source_upd       <- paste0(pubmed_update, file_names_upd)
-download_destination_upd  <- paste0(storage.data.directory, file_names_upd)
-cleaning_destination_upd  <- paste0(clean.data.directory, file_names_upd)
+download_source_upd        <- paste0(pubmed_update, file_names_upd)
+download_destination_upd   <- paste0(storage.data.directory, file_names_upd)
+cleaning_destination_upd   <- paste0(clean.data.directory, file_names_upd)
 
-file_names <- c(file_names_base, file_names_upd)
-download_source       <- c(download_source_base, download_source_upd)
-download_destination  <- c(download_destination_base, download_destination_base)
-cleaning_destination  <- c(cleaning_destination_base, cleaning_destination_upd)
+file_names                 <- c(file_names_base, file_names_upd)
+download_source            <- c(download_source_base, download_source_upd)
+download_destination       <- c(download_destination_base, download_destination_base)
+cleaning_destination       <- c(cleaning_destination_base, cleaning_destination_upd)
   
   
 download_helper_articles <- function(i){

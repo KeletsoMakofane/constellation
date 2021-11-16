@@ -18,3 +18,155 @@ WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
 
 UPDATED AUTHOR NETWORK
 MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) WITH a, b, collect(p.title) as titles, count(p.title) as collaborations CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel WHERE collaborations >= ${collabweight} and a.name < b.name RETURN a, b, rel;
+
+MATCH (:Author {name: 'Nancy Krieger'})-[:WROTE]-(p)
+WHERE 2015 <= p.year <= 2021
+MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
+WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
+    CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
+        WHERE collaborations >=1 and a.name < b.name
+    RETURN a, b, rel;
+
+
+Organization Network
+MATCH (:Organization {name: 'BOSTON UNIVERSITY MEDICAL CAMPUS'})-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper:Paper)
+WHERE 2015 <= paper.year <= 2021
+MATCH (a:Organization)-[:HOSTED]-(project:Project)-[:SUPPORTED]-(paper)-[:SUPPORTED]-(:Project)-[:HOSTED]-(b:Organization)
+WITH a, b, count(paper.title) as collaborations, collect(project.title) as projectnames
+    CALL apoc.create.vRelationship(a, 'CO_SUPPORT', {Collaborations: toInteger(collaborations), Titles:projectnames}, b) YIELD rel
+        WHERE collaborations >=100 and a.name < b.name
+    RETURN a, b, rel;
+
+
+
+AUTHOR NETWORK VIRTUAL NODES
+MATCH (:Author {name: "Keletso Makofane"})-[:WROTE]-(paper)
+    MATCH (authors:Author)-[:WROTE]-(paper)
+WITH collect(distinct authors) as nodes
+WITH apoc.map.groupBy(nodes,'name') as vAuthors
+MATCH (:Author {name: "Keletso Makofane"})-[:WROTE]-(paper)
+    MATCH (a:Author)-[:WROTE]-(paper)-[:WROTE]-(b:Author)
+    WHERE a.name > b.name
+WITH a.name as fAuth, b.name as tAuthb, count(paper) as weight, vAuthors
+    WHERE weight > 1
+RETURN vAuthors[fAuth], vAuthors[tAuthb], apoc.create.vRelationship(vAuthors[fAuth], "CO_AUTH", {weight: weight}, vAuthors[tAuthb])
+
+ORG NET ATTEMPT
+MATCH (:Organization {name: "HARVARD SCHOOL OF PUBLIC HEALTH"})-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (organizations :Organization)-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)
+WITH distinct organizations as nodes, count(paper) as weight
+WITH apoc.map.groupBy(collect(nodes),'name') as vOrganizations
+
+MATCH (:Organization {name: "HARVARD SCHOOL OF PUBLIC HEALTH"})-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (a :Organization)-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)-[:SUPPORTED]-(:Project)-[:HOSTED]-(b:Organization)
+    WHERE a.name > b.name
+
+WITH a.name as fromNode, b.name as toNode, count(paper) as weight, vOrganizations
+
+RETURN vOrganizations[fromNode], vOrganizations[toNode], apoc.create.vRelationship(vOrganizations[fromNode], "CO_SUPPORT", {weight: weight},  vOrganizations[toNode])
+
+
+
+
+# ORGANIZATION SEARCH
+MATCH (:Organization {name: "HARVARD SCHOOL OF PUBLIC HEALTH"})-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (organizations :Organization)-[:HOSTED]-(projects :Project)-[:SUPPORTED]-(paper)
+
+WITH distinct organizations.name as nodes, count(paper) as weight, avg(projects.total_cost) as funding
+
+WITH apoc.create.vNode(["vOrganization"], {name: nodes, weight: weight, avgfunding: funding}) as prenewNodes
+    WHERE weight > 100
+
+WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+
+MATCH (:Organization {name: "HARVARD SCHOOL OF PUBLIC HEALTH"})-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (a :Organization)-[:HOSTED]-(:Project)-[:SUPPORTED]-(paper)-[:SUPPORTED]-(:Project)-[:HOSTED]-(b:Organization)
+    WHERE a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+
+WITH a, b, count(paper) as weight, newNodes
+
+RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], "CO_SUPPORT", {weight: weight}, newNodes[b.name])ewNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], "CO_SUPPORT", {weight: weight}, newNodes[b.name])
+
+
+# INVESTIGATOR SEARCH
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (investigators :Investigator)-[:LED]-(projects :Project)-[:SUPPORTED]-(paper)
+
+WITH distinct investigators.name as nodes, count(paper) as weight, avg(projects.total_cost) as funding
+
+WITH apoc.create.vNode(["vInvestigator"], {name: nodes, weight: weight, avgfunding: funding}) as prenewNodes
+    WHERE weight > 1
+
+WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper)
+    MATCH (a :Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(paper)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
+    WHERE a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+
+WITH a, b, count(paper) as weight, newNodes
+
+RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], "CO_SUP", {weight: weight}, newNodes[b.name]);
+
+
+#INVESTIGATORS SEARCH 2
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper)
+MATCH (paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+
+
+WITH investigators, projects, allpapers
+    WITH distinct investigators.name as names,
+            count(allpapers) as npub,
+            sum(distinct projects.total_cost) as total_funding,
+            collect(distinct projects.title + ": " + projects.total_cost) as grants
+
+    WITH apoc.create.vNode(["vInvestigator"], {name: names, npub: npub, total_funding: total_funding, grants: grants}) as prenewNodes
+    WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper)
+MATCH (paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+MATCH (a:Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(allpapers)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
+    WHERE a.name > b.name
+
+WITH a, b, count(allpapers) as weight, newNodes
+
+RETURN  newNodes[a.name],
+        newNodes[b.name],
+        apoc.create.vRelationship(newNodes[a.name], "CO_SUPPORTED", {weight: weight}, newNodes[b.name])
+LIMIT 20
+
+
+
+
+
+
+
+
+FINAL INVESTIGATORS
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper: Paper)
+MATCH (paper: Paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+
+
+WITH investigators, projects, allpapers
+    WITH distinct investigators.name as names,
+            count(allpapers) as npub,
+            sum(distinct projects.total_cost) as total_funding,
+            collect(distinct projects.title + ": " + projects.total_cost) as grants
+
+    WITH apoc.create.vNode(["vInvestigator"], {name: names, npub: npub, total_funding: total_funding, grants: grants}) as prenewNodes
+    WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+
+MATCH (:Investigator {name: "BERKMAN; LISA F"})-[:LED]-(:Project)-[:SUPPORTED]-(paper: Paper)
+MATCH (paper)-[:SUPPORTED]-(:Project)-[:LED]-(investigators: Investigator)
+MATCH (investigators)-[:LED]-(projects:Project)-[:SUPPORTED]-(allpapers :Paper)
+MATCH (a:Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(allpapers)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
+    WHERE a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+
+WITH a, b, count(allpapers) as weight, newNodes
+RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], "CO_SUPPORT", {weight: weight}, newNodes[b.name])
+
+
+
+
