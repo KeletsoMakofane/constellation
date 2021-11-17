@@ -37,12 +37,32 @@ filenames_citation_edges <- filenames %>%
 #     })
 # }
 
-#if (file.exists(paste0(final.data.directory, "paper_nodes.csv"))) unlink(paste0(final.data.directory, "paper_nodes.csv"), recursive = FALSE)
-if (file.exists(paste0(final.data.directory, "paper_nodes_2.csv"))) unlink(paste0(final.data.directory, "paper_nodes_2.csv"), recursive = FALSE)
+if (file.exists(paste0(final.data.directory, "paper_nodes.csv"))) unlink(paste0(final.data.directory, "paper_nodes.csv"), recursive = FALSE)
 
 
-#for (i in seq_along(filenames_papers)){
-for (i in 580:length(filenames_papers)){
+for (i in 1:559){
+  try({
+    b <- read_csv(filenames_papers[i]) %>%
+      dplyr::mutate(id = as.numeric(id)) %>%
+      dplyr::filter(!is.na(id)) %>%
+      dplyr::mutate(id = paste0("pap_", id)) %>%
+      dplyr::rename(`id:ID` = id, `year:int` = year) %>%
+      dplyr::mutate(`:LABEL` = "Paper") 
+    
+    write_csv(b, paste0(final.data.directory, "paper_nodes_2.csv"), append = (i != 1), col_names=FALSE)
+    write_csv(b %>% filter(FALSE), paste0(final.data.directory, "paper_nodes_headers.csv"), col_names=TRUE)
+    
+    rm(b)
+    
+    print(paste(i, "of", length(filenames_papers), "papers"))
+  })
+}
+
+if (file.exists(paste0(final.data.directory, "paper_nodes.csv"))) unlink(paste0(final.data.directory, "paper_nodes.csv"), recursive = FALSE)
+
+
+
+for (i in 560:length(filenames_papers)){
   try({
     b <- read_csv(filenames_papers[i]) %>%
       dplyr::mutate(id = as.numeric(id)) %>%
