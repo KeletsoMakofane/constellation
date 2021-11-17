@@ -198,7 +198,7 @@ get_author_nodes <- function(author_paper_edges){
 }
 
 
-download_and_clean_data <- function(i){
+download_and_clean_data_pre <- function(i){
   download.file(download_source[i], download_destination[i]) 
   
   file               <- xml2::read_xml(download_destination[i]) %>% xml2::xml_children()   # open file
@@ -235,6 +235,8 @@ download_and_clean_data <- function(i){
 
   return(NULL)
 }
+
+download_and_clean_data <- possibly(download_and_clean_data_pre, otherwise = NULL)
 
 
 ############## EXECUTE DOWNLOAD FUNCTIONS ###############
