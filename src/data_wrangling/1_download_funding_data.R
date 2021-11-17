@@ -188,9 +188,9 @@ download_and_clean_data_links <- function(i){
   
   if (counter_done == 1){
     file.remove(paste0(storage.data.directory, "link_file_"   , i, ".zip"))
-    print(paste("links download", i, "of", length(indices),  "done"))
+    print(paste("links download", i, "of", length(indices_links),  "done"))
   } else {
-    print(paste("links download", i, "of", length(indices),  "failed********"))
+    print(paste("links download", i, "of", length(indices_links),  "failed********"))
   }
   
   return(NULL)
@@ -286,9 +286,9 @@ download_and_clean_data_projects <- function(i){
   
   if (counter_done == 6){
     file.remove(paste0(storage.data.directory, "project_file_", i, ".zip"))
-    print(paste("project download", i, "of", length(indices),  "done"))
+    print(paste("project download", i, "of", length(indices_projects),  "done"))
   } else {
-    print(paste("project download", i, "of", length(indices),  "failed********"))
+    print(paste("project download", i, "of", length(indices_projects),  "failed********"))
   }
   
   return(NULL)
