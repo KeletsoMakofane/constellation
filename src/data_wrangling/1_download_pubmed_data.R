@@ -6,11 +6,16 @@ pubmed_update   <- "https://ftp.ncbi.nlm.nih.gov/pubmed/updatefiles/"
 storage.data.directory    <- paste0(root.data.directory, "data_pubmed_raw/")
 clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
-#unlink(storage.data.directory, recursive = TRUE, force = TRUE)
-#unlink(clean.data.directory, recursive = TRUE, force = TRUE)
+mopup_files <- TRUE
 
-#dir.create(storage.data.directory)
-#dir.create(clean.data.directory)
+if (!mopup_files){
+  unlink(storage.data.directory, recursive = TRUE, force = TRUE)
+  unlink(clean.data.directory, recursive = TRUE, force = TRUE)
+
+  dir.create(storage.data.directory)
+  dir.create(clean.data.directory)
+}
+
 
 ############## GET FILENAMES ###############
 file_names_base <- httr::GET(pubmed_baseline) %>%
@@ -46,7 +51,7 @@ cleaning_destination  <- c(cleaning_destination_base, cleaning_destination_upd)
 
 
 strip_linebreaks <- function(text){
-  text %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '|') %>% str_replace_all(x, "'", "|") %>% str_replace_all(x, ",", ";")
+  text %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '|') %>% str_replace_all("'", "|") %>% str_replace_all(",", ";")
 }
 
 
@@ -237,12 +242,50 @@ download_and_clean_data_pre <- function(i){
   return(NULL)
 }
 
+clean_data_mopup_pre <- function(i){
+  
+  file               <- xml2::read_xml(mop_up_list[i]) %>% xml2::xml_children()   # open file
+  
+  paper_nodes        <- get_paper_nodes(file)
+  author_paper_edges <- get_author_paper_edges(file)
+  author_nodes       <- get_author_nodes(author_paper_edges)
+  
+  counter_done <- 0
+  
+  try({ 
+    write_csv(paper_nodes,                paste0(clean.data.directory, "paper_nodes_",        i, "_mopup.csv")) 
+    counter_done <- counter_done + 1
+  })
+  
+  try({ 
+    write_csv(author_nodes,               paste0(clean.data.directory, "author_nodes_",       i, "_mopup.csv")) 
+    counter_done <- counter_done + 1
+  })
+  
+  try({ 
+    write_csv(author_paper_edges,         paste0(clean.data.directory, "author_paper_edges_", i, "_mopup.csv")) 
+    counter_done <- counter_done + 1
+  })
+  
+  
+  if (counter_done == 3){
+    file.remove(mop_up_list[i])
+    print(paste("download mopup", i, "successful"))
+  } else {
+    print(paste("download mopup", i, "failed"))
+  }
+  
+  
+  return(NULL)
+}
+
 download_and_clean_data <- possibly(download_and_clean_data_pre, otherwise = NULL)
+clean_data_mopup <- possibly(clean_data_mopup_pre, otherwise = NULL)
 
 
 ############## EXECUTE DOWNLOAD FUNCTIONS ###############
 
-if (local) {
+if (local & !mopup_files) {
   download_and_clean_data(900)
   Sys.sleep(1)
   download_and_clean_data(901)
@@ -251,6 +294,27 @@ if (local) {
   Sys.sleep(1)
 }
 
+if (local & mopup_files) {
+  file_names_mopup <- list.files(path = storage.data.directory)
+  mop_up_list <- paste0(storage.data.directory, file_names_mopup)[1:3]
+  
+  clean_data_mopup(1)
+  Sys.sleep(1)
+  clean_data_mopup(2)
+  Sys.sleep(1)
+  clean_data_mopup(3)
+  Sys.sleep(1)
+}
 
-if (!local) parallel::mclapply(seq_along(file_names), download_and_clean_data, mc.cores = 8)
+
+if (!local & !mopup_files) parallel::mclapply(seq_along(file_names), download_and_clean_data, mc.cores = 8)
+
+
+
+if (!local & mopup_files){
+  
+  file_names_mopup <- list.files(path = storage.data.directory)
+  mop_up_list <- paste0(storage.data.directory, file_names_mopup)
+  parallel::mclapply(seq_along(file_names), clean_data_mopup, mc.cores = 8)
+} 
 
