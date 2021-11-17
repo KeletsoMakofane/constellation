@@ -300,7 +300,7 @@ indices <- seq_along(file_names_projects)
 
 if (local) indices <- 1:10
 
-for (i in indices){
+for (i in 43:length(indices)){
   download_and_clean_data_projects(i)
   download_and_clean_data_links(i)
 }
