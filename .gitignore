@@ -3,3 +3,4 @@ node_modules/
 public
 src/components/credentials.js
 .Rproj.user
+node_modules
