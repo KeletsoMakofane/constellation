@@ -296,16 +296,17 @@ download_and_clean_data_projects <- function(i){
 
 ############ EXECUTE DOWNLOAD FUNCTIONS #################
 
-indices <- seq_along(file_names_projects)
+indices_projects <- seq_along(file_names_projects)
+indices_links <- seq_along(file_names_links)
 
-if (local) indices <- 1:10
 
-for (i in 43:length(indices)){
+for (i in seq_along(indices_projects)){
   download_and_clean_data_projects(i)
-  download_and_clean_data_links(i)
 }
 
-
+for (i in seq_along(indices_links)){
+  download_and_clean_data_links(i)
+}
 
 
 
