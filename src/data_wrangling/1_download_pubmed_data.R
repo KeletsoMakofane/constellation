@@ -6,11 +6,11 @@ pubmed_update   <- "https://ftp.ncbi.nlm.nih.gov/pubmed/updatefiles/"
 storage.data.directory    <- paste0(root.data.directory, "data_pubmed_raw/")
 clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
-unlink(storage.data.directory, recursive = TRUE, force = TRUE)
-unlink(clean.data.directory, recursive = TRUE, force = TRUE)
+#unlink(storage.data.directory, recursive = TRUE, force = TRUE)
+#unlink(clean.data.directory, recursive = TRUE, force = TRUE)
 
-dir.create(storage.data.directory)
-dir.create(clean.data.directory)
+#dir.create(storage.data.directory)
+#dir.create(clean.data.directory)
 
 ############## GET FILENAMES ###############
 file_names_base <- httr::GET(pubmed_baseline) %>%
@@ -46,8 +46,9 @@ cleaning_destination  <- c(cleaning_destination_base, cleaning_destination_upd)
 
 
 strip_linebreaks <- function(text){
-  text %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ")
+  text %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '|') %>% str_replace_all(x, "'", "|") %>% str_replace_all(x, ",", ";")
 }
+
 
 first_valid <- function(vec){
   if (all(is.na(vec))) return(NA)

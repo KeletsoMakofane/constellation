@@ -38,10 +38,11 @@ filenames_citation_edges <- filenames %>%
 # }
 
 #if (file.exists(paste0(final.data.directory, "paper_nodes.csv"))) unlink(paste0(final.data.directory, "paper_nodes.csv"), recursive = FALSE)
+if (file.exists(paste0(final.data.directory, "paper_nodes_2.csv"))) unlink(paste0(final.data.directory, "paper_nodes_2.csv"), recursive = FALSE)
 
 
 #for (i in seq_along(filenames_papers)){
-for (i in 514:length(filenames_papers)){
+for (i in 580:length(filenames_papers)){
   try({
     b <- read_csv(filenames_papers[i]) %>%
       dplyr::mutate(id = as.numeric(id)) %>%
@@ -50,7 +51,7 @@ for (i in 514:length(filenames_papers)){
       dplyr::rename(`id:ID` = id, `year:int` = year) %>%
       dplyr::mutate(`:LABEL` = "Paper") 
     
-      write_csv(b, paste0(final.data.directory, "paper_nodes.csv"), append = (i != 1), col_names=FALSE)
+      write_csv(b, paste0(final.data.directory, "paper_nodes_2.csv"), append = (i != 1), col_names=FALSE)
       write_csv(b %>% filter(FALSE), paste0(final.data.directory, "paper_nodes_headers.csv"), col_names=TRUE)
     
       rm(b)
