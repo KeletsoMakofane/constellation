@@ -91,7 +91,7 @@ get_papers_basic_info <- function(file){
 get_mesh_list <- function(file){
   id                 <- xml2::xml_find_first(file, ".//PMID")          %>% xml2::xml_text()  %>% strip_linebreaks()
   
-  helper_add_pmid_to_grandkids <- function(j) {
+  helper_add_pmid_to_grandkids_pre <- function(j) {
     
     mesh_list[j] %>%
       xml2::xml_children() %>%
@@ -99,7 +99,7 @@ get_mesh_list <- function(file){
       xml2::xml_set_attr(., "pmid", id[j])
     
   }
-  
+  helper_add_pmid_to_grandkids <- purrr::possibly(helper_add_pmid_to_grandkids_pre, otherwise = NULL)
   
   mesh_list      <- xml2::xml_find_first(file, ".//MeshHeadingList") 
 
@@ -148,7 +148,7 @@ get_paper_nodes <- function(file){
                   mesh_qual_major = NA, 
                   mesh_qual_nonmajor = NA)
   
-  cat("mesh terms empty")
+  print("mesh terms empty")
   return(result_basic)
 }
 
@@ -156,7 +156,7 @@ get_author_paper_edges <- function(file){
   id                 <- xml2::xml_find_first(file, ".//PMID")          %>% xml2::xml_text()  %>% strip_linebreaks()
   
   
-  helper_add_pmid_to_grandkids <- function(j) {
+  helper_add_pmid_to_grandkids_pre <- function(j) {
     
     
     
@@ -166,7 +166,7 @@ get_author_paper_edges <- function(file){
       xml2::xml_set_attr(., "pmid", id[j])
     
   }
-  
+  helper_add_pmid_to_grandkids <- purrr::possibly(helper_add_pmid_to_grandkids_pre, otherwise = NULL)
   
   
   author_list    <- xml2::xml_find_first(file, ".//AuthorList") 
