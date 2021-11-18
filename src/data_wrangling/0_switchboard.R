@@ -6,7 +6,7 @@ download_pubmed     <- TRUE
 download_funding    <- FALSE
 download_citations  <- FALSE
 
-clean_pubmed        <- TRUE
+clean_pubmed        <- FALSE
 clean_funding       <- FALSE
 
 prep_for_upload     <- FALSE

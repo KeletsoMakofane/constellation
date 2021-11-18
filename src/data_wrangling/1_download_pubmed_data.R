@@ -173,10 +173,10 @@ get_author_paper_edges <- function(file){
   
   seq_along(author_list) %>% lapply(helper_add_pmid_to_grandkids)
   
-  lastname    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_text() %>% strip_linebreaks()
-  forename    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//ForeName") %>% xml2::xml_text() %>% strip_linebreaks()
-  initials    <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//Initials") %>% xml2::xml_text() %>% strip_linebreaks()
-  author_pmid <- author_list %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_attr("pmid")  %>% strip_linebreaks()
+  lastname    <- author_list[!is.na(author_list)] %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_text() %>% strip_linebreaks()
+  forename    <- author_list[!is.na(author_list)] %>% xml2::xml_children() %>% xml2::xml_find_first(".//ForeName") %>% xml2::xml_text() %>% strip_linebreaks()
+  initials    <- author_list[!is.na(author_list)] %>% xml2::xml_children() %>% xml2::xml_find_first(".//Initials") %>% xml2::xml_text() %>% strip_linebreaks()
+  author_pmid <- author_list[!is.na(author_list)] %>% xml2::xml_children() %>% xml2::xml_find_first(".//LastName") %>% xml2::xml_attr("pmid")  %>% strip_linebreaks()
   
   try({
     authors    <- data.frame(lastname = lastname,
