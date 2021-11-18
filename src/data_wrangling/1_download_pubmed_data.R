@@ -6,7 +6,7 @@ pubmed_update   <- "https://ftp.ncbi.nlm.nih.gov/pubmed/updatefiles/"
 storage.data.directory    <- paste0(root.data.directory, "data_pubmed_raw/")
 clean.data.directory      <- paste0(root.data.directory, "data_pubmed_clean/")
 
-mopup_files <- TRUE
+mopup_files <- FALSE
 
 if (!mopup_files){
   unlink(storage.data.directory, recursive = TRUE, force = TRUE)
@@ -51,7 +51,7 @@ cleaning_destination  <- c(cleaning_destination_base, cleaning_destination_upd)
 
 
 strip_linebreaks <- function(text){
-  text %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '|') %>% str_replace_all("'", "|") %>% str_replace_all(",", ";")
+  text %>% enc2utf8 %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '~~') %>% str_replace_all("'", "@@") %>% str_replace_all(",", "##")
 }
 
 
@@ -304,7 +304,7 @@ if (local & !mopup_files) {
 
 if (local & mopup_files) {
   file_names_mopup <- list.files(path = storage.data.directory)
-  mop_up_list <- paste0(storage.data.directory, file_names_mopup)[1:3]
+  mop_up_list <- paste0(storage.data.directory, file_names_mopup)
   
   clean_data_mopup(1)
   Sys.sleep(1)
