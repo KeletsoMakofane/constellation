@@ -78,7 +78,7 @@ for (i in 500:999){
 
 if (file.exists(paste0(final.data.directory, "paper_nodes_3.csv"))) unlink(paste0(final.data.directory, "paper_nodes_3.csv"), recursive = FALSE)
 
-for (i in 1000:499){
+for (i in 1000:1499){
   try({
     b <- read_csv(filenames_papers[i]) %>%
       dplyr::mutate(id = as.numeric(id)) %>%
@@ -97,7 +97,7 @@ for (i in 1000:499){
 
 if (file.exists(paste0(final.data.directory, "paper_nodes_4.csv"))) unlink(paste0(final.data.directory, "paper_nodes_4.csv"), recursive = FALSE)
 
-for (i in 1000:499){
+for (i in 1500:length(filenames_papers)){
   try({
     b <- read_csv(filenames_papers[i]) %>%
       dplyr::mutate(id = as.numeric(id)) %>%

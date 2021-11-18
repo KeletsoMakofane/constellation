@@ -209,6 +209,7 @@ download_and_clean_data_pre <- function(i){
   
   file               <- xml2::read_xml(download_destination[i]) %>% xml2::xml_children()   # open file
   
+  
   paper_nodes        <- get_paper_nodes(file)
   author_paper_edges <- get_author_paper_edges(file)
   author_nodes       <- get_author_nodes(author_paper_edges)
@@ -245,10 +246,14 @@ download_and_clean_data_pre <- function(i){
 clean_data_mopup_pre <- function(i){
   
   file               <- xml2::read_xml(mop_up_list[i]) %>% xml2::xml_children()   # open file
+  cat(paste("opened", file))
   
   paper_nodes        <- get_paper_nodes(file)
+  cat(paste("got paper nodes"))
   author_paper_edges <- get_author_paper_edges(file)
+  cat(paste("got author edges"))
   author_nodes       <- get_author_nodes(author_paper_edges)
+  cat(paste("got author nodes"))
   
   counter_done <- 0
   
@@ -270,9 +275,9 @@ clean_data_mopup_pre <- function(i){
   
   if (counter_done == 3){
     file.remove(mop_up_list[i])
-    print(paste("download mopup", i, "successful"))
+    cat(paste("download mopup", i, "successful"))
   } else {
-    print(paste("download mopup", i, "failed"))
+    cat(paste("download mopup", i, "failed"))
   }
   
   
@@ -315,6 +320,6 @@ if (!local & mopup_files){
   
   file_names_mopup <- list.files(path = storage.data.directory)
   mop_up_list <- paste0(storage.data.directory, file_names_mopup)
-  parallel::mclapply(seq_along(file_names), clean_data_mopup, mc.cores = 8)
+  parallel::mclapply(seq_along(file_names_mopup), clean_data_mopup, mc.cores = 8)
 } 
 
