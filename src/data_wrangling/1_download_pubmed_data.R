@@ -148,7 +148,7 @@ get_paper_nodes <- function(file){
                   mesh_qual_major = NA, 
                   mesh_qual_nonmajor = NA)
   
-  print("mesh terms empty")
+  cat("mesh terms empty")
   return(result_basic)
 }
 
@@ -246,7 +246,7 @@ download_and_clean_data_pre <- function(i){
 clean_data_mopup_pre <- function(i){
   
   file               <- xml2::read_xml(mop_up_list[i]) %>% xml2::xml_children()   # open file
-  cat(paste("opened", file))
+  cat(paste("opened", mop_up_list[i]))
   
   paper_nodes        <- get_paper_nodes(file)
   cat(paste("got paper nodes"))
@@ -260,16 +260,19 @@ clean_data_mopup_pre <- function(i){
   try({ 
     write_csv(paper_nodes,                paste0(clean.data.directory, "paper_nodes_",        i, "_mopup.csv")) 
     counter_done <- counter_done + 1
+    cat(paste("success saving paper nodes"))
   })
   
   try({ 
     write_csv(author_nodes,               paste0(clean.data.directory, "author_nodes_",       i, "_mopup.csv")) 
     counter_done <- counter_done + 1
+    cat(paste("success saving author nodes"))
   })
   
   try({ 
     write_csv(author_paper_edges,         paste0(clean.data.directory, "author_paper_edges_", i, "_mopup.csv")) 
     counter_done <- counter_done + 1
+    cat(paste("success saving autho+paper_edges"))
   })
   
   
