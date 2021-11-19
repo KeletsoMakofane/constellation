@@ -85,7 +85,7 @@ nodes_investigators <- "using periodic commit 1000 LOAD CSV FROM 'file:///invest
 edges_author_paper          <- "using periodic commit 1000 LOAD CSV FROM 'file:///author_paper_edges.csv' as row MATCH (author:Author) WHERE author.name = row[1] MATCH (paper:Paper) WHERE paper.id = row[0]  MERGE (author)-[:WROTE]->(paper);"
 edges_investigator_project  <- "using periodic commit 1000 LOAD CSV FROM 'file:///investigator_project_edges.csv' as row MATCH (i:Investigator) WHERE i.id = row[0] MATCH (p:Project) WHERE p.id = row[1] MERGE (i)-[:LED]->(p);"
 edges_organization_project  <- "using periodic commit 1000 LOAD CSV FROM 'file:///organization_project_edges.csv' as row MATCH (o:Organization) WHERE o.id = row[0] MATCH (p:Project) WHERE p.id = row[1] MERGE (o)-[:HOSTED]->(p);"
-edges_project_paper_edges   <- "using periodic commit 1000 LOAD CSV FROM 'file:///project_paper_edges.csv' as row MATCH (p:Paper) WHERE p.id = row[0] MATCH (q:Project) WHERE q.id = row[1]+ '_' + p.year + '_0' MERGE (q)-[:SUPPORTED]->(p);"
+edges_project_paper_edges   <- "LOAD CSV WITH HEADERS FROM 'file:///project_paper_edges.csv' as row MATCH (p:Paper) WHERE p.id = "pap_" + row.id_paper MATCH (q:Project) WHERE q.id = row.id_project + '_' + p.year + '_0' MERGE (q)-[:SUPPORTED]->(p);"
 edges_project_subproject    <- "using periodic commit 1000 LOAD CSV FROM 'file:///project_subproject_edges.csv' as row MATCH (o:Project) WHERE o.id = row[1] MATCH (p:Project ) WHERE p.id = row[0] MERGE (o)-[:BEGAT]->(p);"
 edges_citation              <- "using periodic commit 1000 LOAD CSV FROM 'file:///citation_edges.csv' as row MATCH (from:Paper {id: row[1]}) MATCH (to:Paper {id: row[0]}) MERGE (from)-[:CITED]->(to);"
 
