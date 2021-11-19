@@ -146,9 +146,9 @@ get_organization_and_project_info <- function(file_project){
 
 get_organization_nodes <- function(organization_and_project_info){
   organization_and_project_info %>%
-    dplyr::select(id_organization, name_organization, city_organization) %>%
+    dplyr::select(id_organization, name_organization, city_organization, country_organization) %>%
     dplyr::group_by(id_organization) %>%
-    dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization) )
+    dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), country_organization = first_valid(country_organization) )
 }
 
 get_organization_project_edges <- function(organization_and_project_info){
@@ -229,7 +229,7 @@ download_and_clean_data_projects <- function(i){
                   id_organization = ORG_IPF_CODE, 
                   name_organization = ORG_NAME,
                   city_organization = ORG_CITY,
-                  city_country = ORG_COUNTRY,
+                  country_organization = ORG_COUNTRY,
                   id_investigator = PI_IDS,
                   name_investigator = PI_NAMEs,
                   core_project_number = CORE_PROJECT_NUM)
