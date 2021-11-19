@@ -4,10 +4,11 @@ library(tidyverse)
 # WHICH SCRIPTS TO RUN?
 download_pubmed     <- FALSE
 download_funding    <- FALSE
-download_citations  <- FALSE
+download_citations  <- TRUE
 
-clean_pubmed        <- TRUE
+clean_pubmed        <- FALSE
 clean_funding       <- FALSE
+clean_citation      <- TRUE
 
 prep_for_upload     <- FALSE
 
@@ -31,6 +32,7 @@ if (download_citations) source(paste0(root.working.directory, "1_download_citati
 
 if (clean_pubmed)       source(paste0(root.working.directory, "2_clean_pubmed_data.R"), verbose = TRUE)
 if (clean_funding)      source(paste0(root.working.directory, "2_clean_funding_data.R"), verbose = TRUE)
+if (clean_citation)     source(paste0(root.working.directory, "2_clean_citation_links_data.R"), verbose = TRUE)
 
 if (prep_for_upload)    source(paste0(root.working.directory, "3_prep_data_for_upload.R"), verbose = TRUE)
 
