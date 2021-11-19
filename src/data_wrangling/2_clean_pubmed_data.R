@@ -18,24 +18,24 @@ filenames_citation_edges <- filenames %>%
   {.[str_detect(., "citation_edges")]}  %>%
   paste0(clean.data.directory, .)
 
-if (file.exists(paste0(final.data.directory, "author_nodes.csv"))) unlink(paste0(final.data.directory, "author_nodes.csv"), recursive = FALSE)
-
-
-for (i in seq_along(filenames_authors)){
-  try({
-    a <- read_csv(filenames_authors[i]) %>%
-      dplyr::filter(!is.na(author_name) & author_name != "") %>%
-      dplyr::rename(`name:ID` = author_name) %>%
-      dplyr::mutate(`:LABEL` = "Author")
-
-      write_csv(a, paste0(final.data.directory, "author_nodes.csv"), append = (i != 1), col_names=FALSE)
-      write_csv(filter(a, FALSE), paste0(final.data.directory, "author_nodes_headers.csv"), col_names=TRUE)
-
-      rm(a)
-
-      print(paste(i, "of", length(filenames_authors), "authors"))
-    })
-}
+# if (file.exists(paste0(final.data.directory, "author_nodes.csv"))) unlink(paste0(final.data.directory, "author_nodes.csv"), recursive = FALSE)
+# 
+# 
+# for (i in seq_along(filenames_authors)){
+#   try({
+#     a <- read_csv(filenames_authors[i]) %>%
+#       dplyr::filter(!is.na(author_name) & author_name != "") %>%
+#       dplyr::rename(`name:ID` = author_name) %>%
+#       dplyr::mutate(`:LABEL` = "Author")
+# 
+#       write_csv(a, paste0(final.data.directory, "author_nodes.csv"), append = (i != 1), col_names=FALSE)
+#       write_csv(filter(a, FALSE), paste0(final.data.directory, "author_nodes_headers.csv"), col_names=TRUE)
+# 
+#       rm(a)
+# 
+#       print(paste(i, "of", length(filenames_authors), "authors"))
+#     })
+# }
 
 if (file.exists(paste0(final.data.directory, "paper_nodes_1.csv"))) unlink(paste0(final.data.directory, "paper_nodes_1.csv"), recursive = FALSE)
 
@@ -48,7 +48,7 @@ for (i in 1:499){
       dplyr::rename(`id:ID` = id, `year:int` = year) %>%
       dplyr::mutate(`:LABEL` = "Paper") 
     
-    write_csv(b, paste0(final.data.directory, "paper_nodes_2.csv"), append = (i != 1), col_names=FALSE)
+    write_csv(b, paste0(final.data.directory, "paper_nodes_1.csv"), append = (i != 1), col_names=FALSE)
     write_csv(b %>% filter(FALSE), paste0(final.data.directory, "paper_nodes_headers.csv"), col_names=TRUE)
     
     rm(b)
