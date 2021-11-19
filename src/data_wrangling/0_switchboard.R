@@ -2,11 +2,11 @@ library(here)
 library(tidyverse)
 
 # WHICH SCRIPTS TO RUN?
-download_pubmed     <- TRUE
+download_pubmed     <- FALSE
 download_funding    <- FALSE
 download_citations  <- FALSE
 
-clean_pubmed        <- FALSE
+clean_pubmed        <- TRUE
 clean_funding       <- FALSE
 
 prep_for_upload     <- FALSE
