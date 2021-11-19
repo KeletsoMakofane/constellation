@@ -33,6 +33,12 @@ scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc
 # Import
 scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/" "/Users/keletsomakofane/Documents/_data/constellations/"
 
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/paper_nodes_1.csv" "/Users/keletsomakofane/Documents/_data/constellations/import/"
+
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/paper_nodes_2.csv" "/Users/keletsomakofane/Documents/_data/constellations/import/"
+
+scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc.harvard.edu:~/shared_space/kem073_proj/_data/constellations/import/paper_nodes_3.csv" "/Users/keletsomakofane/Documents/_data/constellations/import/"
+
 
 
 # To server

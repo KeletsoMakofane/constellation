@@ -7,7 +7,7 @@
 
 
 filenames <- list.files(paste0(root.data.directory, "data_pubmed_clean/")) %>%
-  {.[str_detect(., "papers_")]} %>%
+  {.[str_detect(., "paper_nodes_")]} %>%
   paste0(root.data.directory, "data_pubmed_clean/", .)
 
 
