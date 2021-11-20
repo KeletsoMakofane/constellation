@@ -6,25 +6,6 @@
 
 
 
-filenames <- list.files(paste0(root.data.directory, "data_pubmed_clean/")) %>%
-  {.[str_detect(., "paper_nodes_")]} %>%
-  paste0(root.data.directory, "data_pubmed_clean/", .)
-
-
-pmid_list <- list()
-  
-for (i in seq_along(filenames)) {
-  pmid_list[[i]] <- read.csv(filenames[i]) %>%
-    dplyr::pull(id)
-}
-
-pmid_list_chunks_pre <- list()
-
-for (i in seq_along(pmid_list)){
-  pmid_list_chunks_pre[[i]] <- split(pmid_list[[i]], ceiling(seq_along(pmid_list[[i]])/1000))
-}
-  
-pmid_list_chunks <- unlist(pmid_list_chunks_pre, recursive=FALSE)
 
 ############### PREPARE ENDPOINTS ###############
 base_url          <-  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi"
@@ -61,38 +42,49 @@ add_destination_to_links <- function(node) {
   
 }
 
-#indices <- seq_along(pmid_list_chunks)
-indices <- seq_along(pmid_list_chunks) #picking up where error stopped us
 
-for (i in indices){
+
+
+fetch_and_clean_batch_pre <- function(i, j){
   Sys.sleep(0.34)
-  print(Sys.time())
   
-  ids <- pmid_list_chunks[[i]] %>%
+  ids <- data.table::fread(paste0(root.data.directory, "import/paper_nodes_", j, ".csv"), skip = (i-1)*2000, nrows = 2000) %>%
+    pull(V4) %>%
+    str_replace("pap_", "") %>%
     paste0("id=", .) %>%
     paste(., collapse = "&") 
   
-  payload <- paste(base_param, ids)
+  payload  <- paste(base_param, ids)
+  response <- httr::POST(base_url, body = payload)
+  result   <- response %>%
+               xml2::read_xml() %>%
+               xml2::xml_find_all(".//LinkSet") 
   
+  result %>% lapply(add_destination_to_links)
+  
+  from    <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_text()
+  to      <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_attr("destination")
+  
+  link_table <- data.frame(from = from, to = to)
+  write_csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", i, ".csv"))
 
-  try({
-    
-    response <- httr::POST(base_url, body = payload)
-    
-    result <-   response %>%
-      xml2::read_xml() %>%
-      xml2::xml_find_all(".//LinkSet") 
-    
-    result %>% lapply(add_destination_to_links)
-    
-    
-    
-    from    <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_text()
-    to      <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_attr("destination")
-    
-    link_table <- data.frame(from = from, to = to)
-    write.csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", i, ".csv"))
-    print(paste(i, "out of", length(pmid_list_chunks)))
-    
-  })
 }
+
+
+fetch_and_clean_batch <- purrr::possibly(fetch_and_clean_batch_pre, otherwise = NULL)
+
+
+
+
+for (j in 1:3){
+  total <- R.utils::countLines(paste0(root.data.directory, "import/paper_nodes_", j, ".csv"))
+  nbatches <- ceiling(total/2000)
+  
+  for (i in 1:nbatches){
+    
+    fetch_and_clean_batch(i, j)
+    
+  }
+}
+
+
