@@ -77,7 +77,55 @@ indexes <- '
 
 
 
-nodes_papers        <- "
+nodes_papers_1        <- "
+      using periodic commit 1000 
+      LOAD CSV FROM 'file:///paper_nodes_1.csv' as row 
+      MERGE (m:Paper {id: row[0]}) 
+      ON CREATE SET 
+      m.title = row[1], 
+      m.abstract = row[2], 
+      m.journal_id = row[3], 
+      m.journal_title = row[4], 
+      m.year = toInteger(row[5]), 
+      m.mesh_desc_major = row[6], 
+      m.mesh_desc_nonmajor = row[7], 
+      m.mesh_qual_major = row[8], 
+      m.mesh_qual_nonmajor = row[9];
+"
+
+nodes_papers_2        <- "
+      using periodic commit 1000 
+      LOAD CSV FROM 'file:///paper_nodes_2.csv' as row 
+      MERGE (m:Paper {id: row[0]}) 
+      ON CREATE SET 
+      m.title = row[1], 
+      m.abstract = row[2], 
+      m.journal_id = row[3], 
+      m.journal_title = row[4], 
+      m.year = toInteger(row[5]), 
+      m.mesh_desc_major = row[6], 
+      m.mesh_desc_nonmajor = row[7], 
+      m.mesh_qual_major = row[8], 
+      m.mesh_qual_nonmajor = row[9];
+"
+
+nodes_papers_3        <- "
+      using periodic commit 1000 
+      LOAD CSV FROM 'file:///paper_nodes_3.csv' as row 
+      MERGE (m:Paper {id: row[0]}) 
+      ON CREATE SET 
+      m.title = row[1], 
+      m.abstract = row[2], 
+      m.journal_id = row[3], 
+      m.journal_title = row[4], 
+      m.year = toInteger(row[5]), 
+      m.mesh_desc_major = row[6], 
+      m.mesh_desc_nonmajor = row[7], 
+      m.mesh_qual_major = row[8], 
+      m.mesh_qual_nonmajor = row[9];
+"
+
+nodes_papers_4        <- "
       using periodic commit 1000 
       LOAD CSV FROM 'file:///paper_nodes_4.csv' as row 
       MERGE (m:Paper {id: row[0]}) 
@@ -182,7 +230,10 @@ edges_citation              <- "
 
 try({neo4j_query(con = neo4j_local, qry = indexes , shell_path = cypher_path)})
 
-try({neo4j_query(con = neo4j_local, qry = nodes_papers         , shell_path = cypher_path)})
+try({neo4j_query(con = neo4j_local, qry = nodes_papers_1         , shell_path = cypher_path)})
+try({neo4j_query(con = neo4j_local, qry = nodes_papers_2         , shell_path = cypher_path)})
+try({neo4j_query(con = neo4j_local, qry = nodes_papers_3         , shell_path = cypher_path)})
+try({neo4j_query(con = neo4j_local, qry = nodes_papers_4         , shell_path = cypher_path)})
 try({neo4j_query(con = neo4j_local, qry = nodes_authors        , shell_path = cypher_path)})
 try({neo4j_query(con = neo4j_local, qry = nodes_projects       , shell_path = cypher_path)})
 
