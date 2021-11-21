@@ -6,11 +6,11 @@ download_pubmed     <- FALSE
 download_funding    <- FALSE
 download_citations  <- FALSE
 
-clean_pubmed        <- TRUE
-clean_funding       <- TRUE
-clean_citation      <- TRUE
+clean_pubmed        <- FALSE
+clean_funding       <- FALSE
+clean_citation      <- FALSE
 
-prep_for_upload     <- TRUE
+prep_for_upload     <- FALSE
 upload_to_aws       <- TRUE
 import_to_aws       <- TRUE
 
