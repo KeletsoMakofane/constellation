@@ -4,24 +4,28 @@ library(tidyverse)
 # WHICH SCRIPTS TO RUN?
 download_pubmed     <- FALSE
 download_funding    <- FALSE
-download_citations  <- TRUE
+download_citations  <- FALSE
 
-clean_pubmed        <- FALSE
-clean_funding       <- FALSE
+clean_pubmed        <- TRUE
+clean_funding       <- TRUE
 clean_citation      <- TRUE
 
-prep_for_upload     <- FALSE
+prep_for_upload     <- TRUE
+upload_to_aws       <- TRUE
+import_to_aws       <- TRUE
 
 # CHOOSE FILEPATHS
 local <- str_detect(here(), "keletsomakofane/Documents/")
 
 if (local){
-  root.working.directory <- "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/data_wrangling/"
-  root.data.directory    <- "/Users/keletsomakofane/Documents/_data/constellations/"
+  root.working.directory  <- "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/data_wrangling/"
+  root.data.directory     <- "/Users/keletsomakofane/Documents/_data/constellations/"
+  root.security.directory <- "/Users/keletsomakofane/Documents/_security/"
 
 } else {
-  root.working.directory <- "~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/"
-  root.data.directory 	 <- "~/shared_space/kem073_proj/_data/constellations/"
+  root.working.directory  <- "~/shared_space/thesis_kem073/_gitrepos/constellations/src/data_wrangling/"
+  root.data.directory 	  <- "~/shared_space/kem073_proj/_data/constellations/"
+  root.security.directory <- "~/shared_space/thesis_kem073/_security/"
 }
 
 
@@ -35,6 +39,7 @@ if (clean_funding)      source(paste0(root.working.directory, "2_clean_funding_d
 if (clean_citation)     source(paste0(root.working.directory, "2_clean_citation_links_data.R"), verbose = TRUE)
 
 if (prep_for_upload)    source(paste0(root.working.directory, "3_prep_data_for_upload.R"), verbose = TRUE)
-
+if (upload_to_aws)      source(paste0(root.working.directory, "4_upload_data_to_aws.R"), verbose = TRUE)
+if (import_to_aws)      source(paste0(root.working.directory, "5_bulk_data_import_neo4j.R"), verbose = TRUE)
 
 
