@@ -76,9 +76,13 @@ fetch_and_clean_batch <- purrr::possibly(fetch_and_clean_batch_pre, otherwise = 
 
 
 
-for (j in 2:4){
+for (j in 1:4){
+
+  system(paste("echo >>", paste0(root.data.directory, "import/paper_nodes_", j, ".csv")))
   total <- R.utils::countLines(paste0(root.data.directory, "import/paper_nodes_", j, ".csv"))
   nbatches <- ceiling(total/2000)
+  
+  if (j == 1) nbatches <-  712
   
   for (i in 1:nbatches){
     
