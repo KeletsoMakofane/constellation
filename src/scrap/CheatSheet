@@ -4,7 +4,7 @@
 
 #### AHEM DATABASE
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@54.162.111.126:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.162.111.126
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@graph.constellationsproject.app
 sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/
 cd ~/

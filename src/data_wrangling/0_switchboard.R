@@ -4,15 +4,15 @@ library(tidyverse)
 # WHICH SCRIPTS TO RUN?
 download_pubmed     <- FALSE
 download_funding    <- FALSE
-download_citations  <- FALSE
+download_citations  <- TRUE
 
 clean_pubmed        <- FALSE
 clean_funding       <- FALSE
 clean_citation      <- FALSE
 
 prep_for_upload     <- FALSE
-upload_to_aws       <- TRUE
-import_to_aws       <- TRUE
+upload_to_aws       <- FALSE
+import_to_aws       <- FALSE
 
 # CHOOSE FILEPATHS
 local <- str_detect(here(), "keletsomakofane/Documents/")

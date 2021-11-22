@@ -7,7 +7,7 @@ first_valid <- function(vec){
 }
 
 strip_linebreaks <- function(text){
-  text %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ")
+  text %>% enc2utf8 %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '~~') %>% str_replace_all("'", "@@") %>% str_replace_all(",", "##")
 }
 
 
@@ -99,7 +99,7 @@ get_investigator_nodes <- function(investigator_info){
   extract_name_id_investigators <- function(x, y){
     x <- x %>% trimws() %>% {.[. != ""]} 
     
-    y <- y %>% trimws() %>% {.[. != ""]} 
+    y <- y %>% trimws() %>% {.[. != ""]} %>% strip_linebreaks()
     
     if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, name_investigator = y))
     
@@ -116,7 +116,7 @@ get_investigator_project_edges <- function(investigator_info){
   extract_investigator_project <- function(x, y){
     x <-  x %>% trimws() %>% {.[. != ""]}
     
-    y <- y %>% trimws() %>% {.[. != ""]}
+    y <- y %>% trimws() %>% {.[. != ""]} 
     
     if (length(x) > 0 & length(y) > 0) return(data.frame(id_investigator = x, id_project = y))
     
@@ -130,25 +130,27 @@ get_investigator_project_edges <- function(investigator_info){
 
 get_organization_and_project_info <- function(file_project){
   file_project %>%
-    dplyr::select(id_organization, name_organization, city_organization, city_country, id_project) %>%
+    dplyr::select(id_organization, name_organization, city_organization, country_organization, id_project) %>%
     unique() %>%
     dplyr::group_by(id_organization) %>%
-    dplyr::mutate(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), city_country = first_valid(city_country)) %>%
+    dplyr::mutate(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), country_organization = first_valid(country_organization)) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(name_organization) %>%
     dplyr::mutate(id_organization = first_valid(id_organization), 
                   city_organization = first_valid(city_organization), 
-                  city_country = first_valid(city_country)) %>%
+                  country_organization = first_valid(country_organization)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(name_organization = ifelse(is.na(name_organization), id_organization, name_organization),
-                  id_organization = ifelse(is.na(id_organization), digest::digest2int(as.character(id_organization)), id_organization))
+                  id_organization = ifelse(is.na(id_organization), digest::digest2int(as.character(id_organization)), id_organization)) %>%
+    dplyr::mutate(name_organization = strip_linebreaks(name_organization))
 }
 
 get_organization_nodes <- function(organization_and_project_info){
   organization_and_project_info %>%
     dplyr::select(id_organization, name_organization, city_organization, country_organization) %>%
     dplyr::group_by(id_organization) %>%
-    dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), country_organization = first_valid(country_organization) )
+    dplyr::summarize(name_organization = first_valid(name_organization), city_organization = first_valid(city_organization), country_organization = first_valid(country_organization) ) %>%
+    dplyr::mutate(name_organization = strip_linebreaks(name_organization), city_organization = strip_linebreaks(city_organization), country_organization = strip_linebreaks(country_organization))
 }
 
 get_organization_project_edges <- function(organization_and_project_info){
@@ -237,7 +239,7 @@ download_and_clean_data_projects <- function(i){
   
   
   try({project_nodes                 <- get_project_nodes(file_project)})
-  try({project_subproject_edges     <- get_project_sub_project_edges(file_project)})
+  try({project_subproject_edges      <- get_project_sub_project_edges(file_project)})
   
   try({investigator_info            <- get_investigator_info(file_project)})
   try({investigator_nodes           <- get_investigator_nodes(investigator_info)})

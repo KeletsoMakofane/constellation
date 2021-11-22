@@ -149,7 +149,7 @@ nodes_authors       <- "
 "
 
 nodes_projects      <- "
-      :auto using periodic commit 1000 LOAD CSV FROM 'file:///project_nodes.csv' as row 
+      using periodic commit 1000 LOAD CSV FROM 'file:///project_nodes.csv' as row 
       MERGE (m:Project {id : row[0]})
       ON CREATE SET
       m.title = row[1], 
