@@ -66,7 +66,7 @@ fetch_and_clean_batch_pre <- function(i, j){
   to      <- xml2::xml_find_all(result, ".//Link/Id") %>% xml2::xml_attr("destination")
   
   link_table <- data.frame(from = from, to = to)
-  write_csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", i, ".csv"))
+  write_csv(link_table, paste0(root.data.directory, "data_pubmed_clean/citation_edges_", j, "_", i, ".csv"))
 
 }
 
@@ -76,7 +76,7 @@ fetch_and_clean_batch <- purrr::possibly(fetch_and_clean_batch_pre, otherwise = 
 
 
 
-for (j in 1:3){
+for (j in 2:4){
   total <- R.utils::countLines(paste0(root.data.directory, "import/paper_nodes_", j, ".csv"))
   nbatches <- ceiling(total/2000)
   
@@ -87,4 +87,5 @@ for (j in 1:3){
   }
 }
 
+#redo 1-35 for j = 1
 
