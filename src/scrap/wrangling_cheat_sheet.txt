@@ -45,7 +45,7 @@ scp -i "/Users/keletsomakofane/Documents/_security/rce_key"  -r "kem073@rce.hmdc
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import" "ubuntu@graph.constellationsproject.app:~/"
 
 # SSH AWS
-ssh -i /Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem  ubuntu@ec2-18-204-226-206.compute-1.amazonaws.com
+ssh -i /Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem  ubuntu@graph.constellationsproject.app
 
 
 c("hello

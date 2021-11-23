@@ -90,6 +90,7 @@ edges_project_subproject    <- "using periodic commit 1000 LOAD CSV FROM 'file:/
 edges_citation              <- "using periodic commit 1000 LOAD CSV FROM 'file:///citation_edges.csv' as row MATCH (from:Paper {id: row[1]}) MATCH (to:Paper {id: row[0]}) MERGE (from)-[:CITED]->(to);"
 
 
+
 try({neo4j_query(con = neo4j_local, qry = indexes , shell_path = cypher_path)})
 
 try({neo4j_query(con = neo4j_local, qry = nodes_papers         , shell_path = cypher_path)})

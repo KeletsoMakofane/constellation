@@ -3,15 +3,15 @@ library(tidyverse)
 
 # WHICH SCRIPTS TO RUN?
 download_pubmed     <- FALSE
-download_funding    <- TRUE
+download_funding    <- FALSE
 download_citations  <- FALSE
 
 clean_pubmed        <- FALSE
-clean_funding       <- TRUE
+clean_funding       <- FALSE
 clean_citation      <- FALSE
 
-prep_for_upload     <- FALSE
-upload_to_aws       <- FALSE
+prep_for_upload     <- TRUE
+upload_to_aws       <- TRUE
 import_to_aws       <- FALSE
 
 # CHOOSE FILEPATHS
