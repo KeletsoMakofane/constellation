@@ -5,7 +5,7 @@ library(tidyverse)
 download_pubmed     <- FALSE
 download_funding    <- FALSE
 download_citations  <- FALSE
-download_data_indexes  <- TRUE
+download_data_indexes  <- FALSE
 
 clean_pubmed        <- FALSE
 clean_funding       <- FALSE
