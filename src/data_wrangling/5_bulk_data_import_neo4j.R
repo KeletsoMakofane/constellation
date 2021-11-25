@@ -258,7 +258,7 @@ racism_covid_index <- "
     using periodic commit 1000 
     LOAD CSV FROM 'file:///racism_covid_ids.csv' as row 
     MATCH (p:Paper {id: row[0]})
-    SET p.p.racism_covid = true;
+    SET p.racism_covid = true;
 "
 
 
