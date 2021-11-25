@@ -107,12 +107,10 @@ const Header = (props) => {
                         &emsp; &emsp;
 
                         Author/Title Search:  &emsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
-                                                    <option value="race" >Race</option>
+                                                    <option value="all" >All</option>
                                                     <option value="racism" >Racism</option>
                                                     <option value="covid">COVID</option>
-                                                    <option value="race_covid">Race and COVID</option>
                                                     <option value="racism_covid">Racism and COVID</option>
-                                                    <option value="all">Race or Racism or COVID</option>
                                             </select>
                         &emsp; &emsp; &emsp;
 

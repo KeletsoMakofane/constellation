@@ -1,25 +1,17 @@
 const TopicRestriction = (topicChosen) => {
 
             switch (topicChosen) {
-            case "race":
-                return "(p.race = 'TRUE')";
-
             case "racism":
-                return "(p.racism = 'TRUE')";
-
+                return "(p.racism = true)";
 
             case "covid":
-                return "(p.covid = 'TRUE')";
-
-            case "race_covid":
-                return "(p.race = 'TRUE' AND p.covid = 'TRUE')";
-
+                return "(p.covid = true)";
 
             case "racism_covid":
-                return "(p.racism = 'TRUE' AND p.covid = 'TRUE')";
+                return "(p.racism_covid = true)";
 
                 default:
-                return "(p.race = 'TRUE' OR p.racism = 'TRUE' OR p.covid = 'TRUE')";
+                return "(exists(p.id))";
         }
 }
 

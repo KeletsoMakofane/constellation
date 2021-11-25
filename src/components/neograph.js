@@ -59,7 +59,7 @@ import { TopicRestriction } from "@components";
                  initial_cypher: `
                             MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p)
                             MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) 
-                            WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) 
+                            WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)}
                             WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
                             CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel  
                             WHERE collaborations >= ${collabweight} and a.name < b.name 
