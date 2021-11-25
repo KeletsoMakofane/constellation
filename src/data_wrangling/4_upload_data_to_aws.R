@@ -10,8 +10,7 @@ filepaths  <-
                 {row.names(.)}
 
 
-#session <- ssh::ssh_connect("ubuntu@graph.constellationsproject.app", keyfile = paste0(root.security.directory, "neo4j-aws-newkey.pem"))
-session <- ssh::ssh_connect("ubuntu@54.227.155.144", keyfile = paste0(root.security.directory, "neo4j-aws-newkey.pem"))
+session <- ssh::ssh_connect("ubuntu@graph.constellationsproject.app", keyfile = paste0(root.security.directory, "neo4j-aws-newkey.pem"))
 
 
 for (i in seq_along(filepaths)){
