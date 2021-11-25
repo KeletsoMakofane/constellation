@@ -9,7 +9,9 @@ filepaths  <-
                 dplyr::arrange(size) %>%
                 {row.names(.)}
 
+
 session <- ssh::ssh_connect("ubuntu@graph.constellationsproject.app", keyfile = paste0(root.security.directory, "neo4j-aws-newkey.pem"))
+
 
 for (i in seq_along(filepaths)){
   ssh::scp_upload(session, files = filepaths[i], to = "import/")

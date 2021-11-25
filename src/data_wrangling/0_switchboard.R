@@ -3,15 +3,16 @@ library(tidyverse)
 
 # WHICH SCRIPTS TO RUN?
 download_pubmed     <- FALSE
-download_funding    <- TRUE
+download_funding    <- FALSE
 download_citations  <- FALSE
+download_data_indexes  <- FALSE
 
 clean_pubmed        <- FALSE
-clean_funding       <- TRUE
+clean_funding       <- FALSE
 clean_citation      <- FALSE
 
 prep_for_upload     <- FALSE
-upload_to_aws       <- FALSE
+upload_to_aws       <- TRUE
 import_to_aws       <- FALSE
 
 # CHOOSE FILEPATHS
@@ -33,6 +34,7 @@ if (local){
 if (download_pubmed)    source(paste0(root.working.directory, "1_download_pubmed_data.R"), verbose = TRUE)
 if (download_funding)   source(paste0(root.working.directory, "1_download_funding_data.R"), verbose = TRUE)
 if (download_citations) source(paste0(root.working.directory, "1_download_citation_links_data.R"), verbose = TRUE)
+if (download_data_indexes) source(paste0(root.working.directory, "1_data_indexing.R"), verbose = TRUE)
 
 if (clean_pubmed)       source(paste0(root.working.directory, "2_clean_pubmed_data.R"), verbose = TRUE)
 if (clean_funding)      source(paste0(root.working.directory, "2_clean_funding_data.R"), verbose = TRUE)
