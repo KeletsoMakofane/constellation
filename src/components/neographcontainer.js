@@ -11,7 +11,7 @@ const NeoGraphContainer = (props) => {
     const [stop, setStop] = useState(defaultStop);
     const [topic, setTopic] = useState(defaultTopic);
     const [queryName, setQueryName] = useState(defaultName);
-    const [queryWeight, setQueryWeight] = useState('1');
+    const [queryWeight, setQueryWeight] = useState(defaultWeight);
     const [queryStart, setQueryStart] = useState(defaultStart);
     const [queryStop, setQueryStop] = useState(defaultStop);
     const [queryTopic, setQueryTopic] = useState(defaultTopic);

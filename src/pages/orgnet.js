@@ -16,8 +16,8 @@ const NEOVIS_ENCRYPTION = Credentials.NEOVIS_ENCRYPTION;
 const DEF_NAME = 'JOHNS HOPKINS UNIVERSITY';
 const DEF_START = '2015';
 const DEF_STOP = '2021';
-const DEF_TOPIC = 'all'
-const DEF_WEIGHT = '10000'
+const DEF_TOPIC = 'all';
+const DEF_WEIGHT = '200';
 
 const PubMedPage = ({ location }) => {
 
