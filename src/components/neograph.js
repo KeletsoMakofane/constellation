@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import useResizeAware from "react-resize-aware";
 import PropTypes from "prop-types";
 import Neovis from "neovis.js/dist/neovis.js";
-import { TopicRestriction } from "@components";
+import { CypherQuery, CypherLabels, CypherRelationships } from "@components";
+
 
 
     const NeoGraph = (props) => {
@@ -19,6 +20,7 @@ import { TopicRestriction } from "@components";
             topicChosen,
             encryptionStatus,
             neovisProtocol,
+            dataView
         } = props;
 
 
@@ -30,46 +32,22 @@ import { TopicRestriction } from "@components";
             const enc = encryptionStatus ? "ENCRYPTION_ON" : "ENCRYPTION_OFF"
 
             const config = {
-                container_id: visRef.current.id,
-                server_url: urlWithProtocol,
-                server_user: neo4jUser,
+                container_id:   visRef.current.id,
+                server_url:      urlWithProtocol,
+                server_user:     neo4jUser,
                 server_password: neo4jPassword,
-                encrypted: enc,
-                trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES",
-                labels: {
-                    "Author": {
-                        caption: "name",
-                        size: "auth_pagerank",
-                        community: 'community',
-                        title_properties: ["name"],
-                        shape: "diamond",
-                        font: {
-                            color: "blue",
-                            size: 11,
-                            background: "black"
-                        }
-                    }
-                },
-                relationships: {
-                    "CO_AUTH": {
-                        caption: false,
-                        thickness: 'Collaborations',
-                    }
-                },
-                 initial_cypher: `
-                            MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p)
-                            MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author) 
-                            WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)}
-                            WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
-                            CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel  
-                            WHERE collaborations >= ${collabweight} and a.name < b.name 
-                            RETURN a, b, rel;
-                            `
+                encrypted:       enc,
+                trust:           "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES",
+                labels:          CypherLabels(dataView),
+                relationships:   CypherRelationships(dataView),
+                initial_cypher:  CypherQuery(searchname,collabweight,startYear,stopYear,topicChosen,dataView)
             };
             const vis = new Neovis(config);
             vis.render();
-            // console.log(vis);
-            // console.log(`MATCH (a:Author {name: '${searchname}' }) CALL apoc.path.subgraphAll(a, {maxLevel: 2}) YIELD nodes, relationships WITH nodes, relationships MATCH (c)-[:WROTE]-(p:Paper)-[:WROTE]-(d) WHERE c IN nodes AND d IN nodes AND toInteger(${startYear}) <= toInteger(p.year) <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} WITH c, d, collect(p.title) as titles, count(p) as collaborations WHERE collaborations >= ${collabweight} CALL apoc.create.vRelationship(c, 'CO_AUTH', {titles:titles, count:collaborations}, d) YIELD rel as collab WHERE c.name < d.name RETURN c, d, collab;`)
+            console.log(CypherLabels(dataView));
+            console.log(CypherRelationships(dataView));
+            console.log(CypherQuery(searchname,collabweight,startYear,stopYear,topicChosen,dataView))
+
         }, [neo4jUri, neo4jUser, neo4jPassword, searchname, collabweight, startYear, stopYear, topicChosen, encryptionStatus, urlWithProtocol]);
 
         return (

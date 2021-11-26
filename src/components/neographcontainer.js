@@ -4,9 +4,9 @@ import { trackCustomEvent } from "gatsby-plugin-google-analytics"
 
 
 const NeoGraphContainer = (props) => {
-    const {defaultName, defaultStart, defaultStop, defaultTopic, containerId, neo4jUri, neo4jUser, neo4jPassword, neovisProtocol, neovisEncryptionStatus } = props
+    const {defaultName, defaultStart, defaultStop, defaultTopic, defaultWeight, containerId, neo4jUri, neo4jUser, neo4jPassword, neovisProtocol, neovisEncryptionStatus, dataView } = props
     const [name, setName] = useState(defaultName);
-    const [weight, setWeight] = useState('1');
+    const [weight, setWeight] = useState(defaultWeight);
     const [start, setStart] = useState(defaultStart);
     const [stop, setStop] = useState(defaultStop);
     const [topic, setTopic] = useState(defaultTopic);
@@ -68,7 +68,8 @@ const NeoGraphContainer = (props) => {
                     startYear = {queryStart}
                     stopYear = {queryStop}
                     topicChosen = {queryTopic}
-                    encryptionStatus = {neovisEncryptionStatus}/>
+                    encryptionStatus = {neovisEncryptionStatus}
+                    dataView = {dataView}/>
 
             </div>
 
@@ -85,7 +86,7 @@ const NeoGraphContainer = (props) => {
                 topicChange = {handleChangeTopic}
                 submit = {handleSubmit}
                 onSelect = {setName}
-
+                dataView = {dataView}
             />
 
             <Footer/>

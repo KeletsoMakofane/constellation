@@ -79,6 +79,9 @@ indexes <- '
             
             CREATE FULLTEXT INDEX InvestigatorNametextIndex IF NOT EXISTS
             FOR (n:Investigator) ON EACH [n.name];
+
+            CREATE FULLTEXT INDEX OrganizationNametextIndex IF NOT EXISTS
+            FOR (n:Organization) ON EACH [n.name];
             
             CREATE FULLTEXT INDEX AbstractSearch IF NOT EXISTS
             FOR (n:Paper) ON EACH [n.abstract];

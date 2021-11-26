@@ -5,6 +5,7 @@ import Autocomplete from 'react-autocomplete';
 import neo4j from "neo4j-driver";
 import { useAsync } from 'react-async-hook';
 import  Credentials   from './credentials';
+import {CypherAutoCNames} from "@components";
 
 
 const StyledForm = styled.div`
@@ -30,11 +31,19 @@ const StyledForm = styled.div`
   transition: var(--transition);
 `;
 
-    const getNames = async (searchString) => {
+
+
+
+const Header = (props) => {
+    const {name, weight, start, stop, topic, nameChange, weightChange, startChange, stopChange, topicChange, submit, onSelect, dataView} = props;
+    const [suggestions, setSuggestions] = useState([]);
+    let displayList;
+
+        const getNames = async (searchString) => {
             const urlWithProtocol = Credentials.NEODRIVER_PROTOCOL + Credentials.NEO4J_URI;
             const driver = neo4j.driver( urlWithProtocol , neo4j.auth.basic(Credentials.NEO4J_USER, Credentials.NEO4J_PASSWORD), {encrypted: 'ENCRYPTION_ON', trust: "TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"});
             const session = driver.session();
-            const pulled = await session.run(`CALL db.index.fulltext.queryNodes("NameFulltextIndex", $searchName) YIELD node, score RETURN node.name as name LIMIT 5`, {searchName: searchString});
+            const pulled = await session.run(CypherAutoCNames(dataView), {searchName: searchString});
 
 
 
@@ -46,11 +55,6 @@ const StyledForm = styled.div`
 
             }
 
-
-const Header = (props) => {
-    const {name, weight, start, stop, topic, nameChange, weightChange, startChange, stopChange, topicChange, submit, onSelect} = props;
-    const [suggestions, setSuggestions] = useState([]);
-    let displayList;
 
     const pulledNames = useAsync(getNames, [name])
 
@@ -89,15 +93,8 @@ const Header = (props) => {
                                                  />
                         &emsp; &emsp;
 
-                        Collaboration Strength:  &emsp; <select  name="weight" id = "weight" value = {weight} onChange={weightChange}>
-                                                    <option value="1" >1+ Papers</option>
-                                                    <option value="2">2+ Papers</option>
-                                                    <option value="3">3+ Papers</option>
-                                                    <option value="4">4+ Papers</option>
-                                                    <option value="5">5+ Papers</option>
-                                                    <option value="10">10+ Papers</option>
-                                                    <option value="20">20+ Papers</option>
-                        </select>
+
+                        Min Collaborations Shown:  &emsp; <input type="number" style = {{width: '70px'}} value = {weight} onChange = {weightChange}/>
                         &emsp; &emsp;
 
                         Date Range:  &emsp;<input type="number" style = {{width: '70px'}} value = {start} onChange = {startChange}/>

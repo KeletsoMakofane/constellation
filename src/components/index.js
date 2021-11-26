@@ -6,3 +6,4 @@ export { default as Footer } from './footer';
 export { default as Credentials} from './credentials';
 export { default as ComingSoon } from './comingsoon';
 export { default as TopicRestriction } from './topics';
+export { CypherQuery, CypherAutoCNames, CypherLabels, CypherRelationships } from './queries';

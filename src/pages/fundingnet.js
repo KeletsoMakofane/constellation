@@ -13,11 +13,11 @@ const NEOVIS_ENCRYPTION = Credentials.NEOVIS_ENCRYPTION;
 
 
 // Defaults
-const DEF_NAME = 'Keletso Makofane';
+const DEF_NAME = 'BERKMAN; LISA F';
 const DEF_START = '2015';
 const DEF_STOP = '2021';
 const DEF_TOPIC = 'all'
-const DEF_WEIGHT = '1';
+const DEF_WEIGHT = '1'
 
 const PubMedPage = ({ location }) => {
 
@@ -36,7 +36,7 @@ useEffect (() => {document.body.style.backgroundColor = "black"})
           defaultStop = {DEF_STOP}
           defaultTopic = {DEF_TOPIC}
           defaultWeight = {DEF_WEIGHT}
-          dataView = "collaboration_net"/>
+          dataView = "funding_net"/>
   );
 };
 
