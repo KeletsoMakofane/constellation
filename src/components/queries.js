@@ -15,13 +15,20 @@ const CypherQuery = (searchname, collabweight, startYear, stopYear, topicChosen,
                                 RETURN a, b, rel;`)
 
                 case "funding_net":
-                    return  (   `MATCH (:Investigator {name: '${searchname}'})-[:LED]-(:Project)-[:SUPPORTED]-(p:Paper)
-                                MATCH (a:Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(p)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
-                                WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)}
-                                WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
-                                CALL apoc.create.vRelationship(a, 'CO_PI', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
-                                WHERE collaborations >= ${collabweight} and a.name < b.name 
-                                RETURN a, b, rel;`)
+                    return  (       `MATCH (:Investigator {name: '${searchname}'})-[:LED]-(:Project)-[:SUPPORTED]-(p)
+                                    WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)} 
+                                    MATCH (investigators :Investigator)-[:LED]-(projects :Project)-[:SUPPORTED]-(p)
+                                    WITH distinct investigators.name as nodes, count(p) as weight, sum(projects.total_cost) as funding
+                                    WITH nodes, weight, funding
+                                    WHERE weight >= ${collabweight}
+                                    WITH apoc.create.vNode(['vInvestigator'], {name: nodes, weight: weight, Funding: funding}) as prenewNodes
+                                    WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+                                    MATCH (:Investigator {name: '${searchname}'})-[:LED]-(:Project)-[:SUPPORTED]-(paper)
+                                    MATCH (a :Investigator)-[:LED]-(:Project)-[:SUPPORTED]-(paper)-[:SUPPORTED]-(:Project)-[:LED]-(b:Investigator)
+                                    WHERE a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+                                    WITH a, b, count(paper) as weight, newNodes
+                                    WHERE weight >= ${collabweight}
+                                    RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], 'CO_PI', {weight: toInteger(weight)}, newNodes[b.name]);`)
 
                 case "org_net":
                     return  (       `MATCH (:Organization {name: '${searchname}'})-[:HOSTED]-(:Project)-[:SUPPORTED]-(p)
@@ -77,11 +84,11 @@ const CypherLabels = (view) => {
 
         case "funding_net":
             return ({
-                    "Investigator": {
+                    "vInvestigator": {
                         caption: "name",
-                        size: "auth_pagerank",
+                        size: "Funding",
                         community: 'community',
-                        title_properties: ["name"],
+                        title_properties: ["name", "Funding"],
                         shape: "diamond",
                         font: {
                             color: "blue",
@@ -124,7 +131,7 @@ const CypherRelationships = (view) => {
             return ({
                     "CO_PI": {
                         caption: false,
-                        thickness: 'Collaborations',
+                        thickness: 'weight',
                     }
                 })
 

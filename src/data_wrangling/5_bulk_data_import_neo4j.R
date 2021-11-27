@@ -265,6 +265,7 @@ racism_covid_index <- "
 "
 
 
+
 try({neo4j_query(con = neo4j_local, qry = indexes , shell_path = cypher_path)})
 
 try({neo4j_query(con = neo4j_local, qry = nodes_papers_1         , shell_path = cypher_path)})
