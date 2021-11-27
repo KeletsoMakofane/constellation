@@ -9,9 +9,9 @@ download_data_indexes  <- FALSE
 
 clean_pubmed        <- FALSE
 clean_funding       <- FALSE
-clean_citation      <- FALSE
+clean_citation      <- TRUE
 
-prep_for_upload     <- FALSE
+prep_for_upload     <- TRUE
 upload_to_aws       <- TRUE
 import_to_aws       <- FALSE
 
