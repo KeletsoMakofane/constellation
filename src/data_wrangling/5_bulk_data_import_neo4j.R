@@ -3,6 +3,9 @@ library(neo4jshell)
 neo4j_local <- list(address = "neo4j+s://graph.constellationsproject.app", uid = "neo4j", pwd = "academy-recycle-system-valery-newton-357")
 cypher_path <- "/opt/homebrew/bin/cypher-shell"
 
+session           <- ssh::ssh_connect("ubuntu@graph.constellationsproject.app", keyfile = paste0(root.security.directory, "neo4j-aws-newkey.pem"))
+start_cyphershell <- "cypher-shell -a neo4j+s://graph.constellationsproject.app -u neo4j -p academy-recycle-system-valery-newton-357"
+
 
 indexes <- '
             CREATE CONSTRAINT UniquePaperIdConstraint IF NOT EXISTS
@@ -264,6 +267,63 @@ racism_covid_index <- "
     SET p.racism_covid = true;
 "
 
+create_auth_citation_net <- "
+    CALL gds.graph.create.cypher(
+      'Auth_Citations',
+      'MATCH (a:Author) RETURN id(a) AS id',
+      'MATCH (a:Author)-[:WROTE]->(:Paper)-[:CITED]->(:Paper)-[:WROTE]-(b:Author) RETURN id(a) AS source, id(b) AS target');
+"
+
+write_auth_articlerank <- "
+    CALL gds.articleRank.write(
+      'Auth_Citations',
+    { writeProperty: 'auth_pagerank' }
+    );
+"
+
+create_auth_collab_net <- "
+    CALL gds.graph.create.cypher(
+      'Auth_Collaboration',
+      'MATCH (a:Author) RETURN id(a) AS id',
+      'MATCH (a:Author)-[:WROTE]-(:Paper)-[:WROTE]-(b:Author) RETURN id(a) AS source, id(b) AS target');
+"
+
+write_auth_community <- "
+    CALL gds.labelPropagation.write(
+        'Auth_Collaboration',
+        { writeProperty: 'auth_community' }
+    );
+"
+
+sys::exec_wait()
+
+ssh::ssh_exec_wait(session, command = c(start_cyphershell))
+
+ssh::ssh_exec_wait(session, command = c(
+  start_cyphershell,
+  nodes_papers_1,
+  nodes_papers_2,
+  nodes_papers_3,
+  nodes_papers_4,
+  nodes_authors,
+  nodes_projects,
+  nodes_organizations,
+  nodes_investigators,
+  edges_author_paper,
+  edges_investigator_project,
+  edges_organization_project,
+  edges_project_paper_edges,
+  edges_project_subproject,
+  edges_citation,
+  racism_index,
+  covid_index,
+  racism_covid_index,
+  create_auth_citation_net,
+  write_auth_articlerank,
+  create_auth_collab_net,
+  write_auth_community,
+  ':exit'
+))
 
 
 try({neo4j_query(con = neo4j_local, qry = indexes , shell_path = cypher_path)})
@@ -288,5 +348,10 @@ try({neo4j_query(con = neo4j_local, qry = edges_citation             , shell_pat
 try({neo4j_query(con = neo4j_local, qry = racism_index               , shell_path = cypher_path)})
 try({neo4j_query(con = neo4j_local, qry = covid_index                , shell_path = cypher_path)})
 try({neo4j_query(con = neo4j_local, qry = racism_covid_index         , shell_path = cypher_path)})
+
+
+try({neo4j_query(con = neo4j_local, qry = create_auth_citation_net         , shell_path = cypher_path)})
+try({neo4j_query(con = neo4j_local, qry = write_auth_articlerank         , shell_path = cypher_path)})
+
 
 
