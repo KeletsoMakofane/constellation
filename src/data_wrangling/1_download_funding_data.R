@@ -7,7 +7,7 @@ first_valid <- function(vec){
 }
 
 strip_linebreaks <- function(text){
-  text %>% enc2utf8 %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") %>% str_replace_all('"', '~~') %>% str_replace_all("'", "@@") %>% str_replace_all(",", "##")
+  text %>% enc2utf8 %>% trimws() %>% str_replace_all("[:blank:]"," ") %>% str_replace_all("[:space:]"," ") #%>% str_replace_all('"', '~~') %>% str_replace_all("'", "@@") %>% str_replace_all(",", "##")
 }
 
 
