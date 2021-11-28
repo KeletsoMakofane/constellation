@@ -87,9 +87,8 @@ const CypherLabels = (view) => {
                     "Author": {
                         caption: "name",
                         size: "auth_pagerank",
-                        community: 'community',
-                        title_properties: ["name"],
-                        shape: "diamond",
+                        community: "auth_community",
+                        title_properties: ["name", "auth_pagerank", "auth_community"],
                         font: {
                             color: "blue",
                             size: 11,

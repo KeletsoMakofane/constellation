@@ -100,7 +100,7 @@ dbms.ssl.policy.bolt.private_key=/var/lib/neo4j/certificates/bolt/neo4j.key
 dbms.ssl.policy.bolt.public_certificate=/var/lib/neo4j/certificates/bolt/neo4j.cert
 dbms.ssl.policy.https.private_key=/var/lib/neo4j/certificates/https/neo4j.key
 dbms.ssl.policy.https.public_certificate=/var/lib/neo4j/certificates/https/neo4j.cert
-dbms.connector.bolt.listen_address=0.0.0.0:7687
+dbms.connector.bolt.listen_address=:7687
 #*****************************************************************
 # SSL system configuration
 #*****************************************************************
