@@ -29,8 +29,8 @@ const CypherQuery = (searchname, collabweight, startYear, stopYear, topicChosen,
                                     WITH toStringList(collect(nodes)) as nodes2, toIntegerList(collect(communities)) as communities2
                                     WITH apoc.map.fromLists(nodes2, communities2) as output
                                     WITH output, toIntegerList(keys(output)) as key_string_list
-                                    MATCH (a:Author) WHERE id(a) IN key_string_list
-                                    WITH apoc.create.vNode(['vAuthor'], {name: a.name, id: id(a), community: output[toString(id(a))]}) as prenewNodes
+                                    MATCH (a:Author)-[:WROTE]-(p:Paper) WHERE id(a) IN key_string_list AND toInteger(${startYear}) <= p.year <= toInteger(${stopYear})
+                                    WITH apoc.create.vNode(['vAuthor'], {name: a.name, nPapers: count(p), id: id(a), community: output[toString(id(a))]}) as prenewNodes
                                     WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
                                     MATCH (:Author {name: '${searchname}'})-[:WROTE]-(paper)
                                     MATCH (a :Author)-[:WROTE]-(paper)-[:WROTE]-(b:Author) WHERE  a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
@@ -110,9 +110,9 @@ const CypherLabels = (view) => {
             return ({
                     "vAuthor": {
                         caption: "name",
-                        size: "auth_pagerank",
+                        size: "nPapers",
                         community: "community",
-                        title_properties: ["name", "auth_pagerank", "auth_community", "auth_community_disp"],
+                        title_properties: ["name", "auth_pagerank", "auth_community", "auth_community_disp", "nPapers"],
                         font: {
                             color: "blue",
                             size: 11,
