@@ -17,7 +17,7 @@ const DEF_NAME = 'Keletso Makofane';
 const DEF_START = '2015';
 const DEF_STOP = '2021';
 const DEF_TOPIC = 'all';
-const DEF_WEIGHT = '1';
+const DEF_WEIGHT = '2';
 
 const PubMedPage = ({ location }) => {
 

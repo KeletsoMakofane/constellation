@@ -5,14 +5,38 @@ const CypherQuery = (searchname, collabweight, startYear, stopYear, topicChosen,
 
 
             switch (view) {
-                case "collaboration_net":
-                    return  (   `MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p)
-                                MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
-                                WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)}
-                                WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
-                                WHERE collaborations >= ${collabweight} and a.name < b.name 
-                                CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
-                                RETURN a, b, rel;`)
+                // case "collaboration_net":
+                //     return  (   `MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p)
+                //                 MATCH (a:Author)-[:WROTE]-(p:Paper)-[:WROTE]-(b:Author)
+                //                 WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear}) AND ${TopicRestriction(topicChosen)}
+                //                 WITH a, b, collect(p.title) as titles, count(p.title) as collaborations
+                //                 WHERE collaborations >= ${collabweight} and a.name < b.name
+                //                 CALL apoc.create.vRelationship(a, 'CO_AUTH', {Collaborations: toInteger(collaborations), Titles:titles}, b) YIELD rel
+                //                 RETURN a, b, rel;`)
+
+                                case "collaboration_net":
+                    return  (     `CALL gds.labelPropagation.stream({
+                                        nodeQuery: "MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p:Paper) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear})
+                                                        MATCH (a:Author)-[:WROTE]-(p)
+                                                        RETURN distinct id(a) as id",
+                                        relationshipQuery: "MATCH (:Author {name: '${searchname}'})-[:WROTE]-(p:Paper) WHERE toInteger(${startYear}) <= p.year <= toInteger(${stopYear})
+                                                        MATCH (a:Author)-[:WROTE]-(p)-[:WROTE]-(b:Author)
+                                                        WITH id(a) as source, id(b) as target, count(p) as weight
+                                                        WHERE weight >= ${collabweight}
+                                                        RETURN source, target, weight",
+                                        relationshipWeightProperty: "weight"} ) YIELD nodeId as nodes, communityId as communities
+
+                                    WITH toStringList(collect(nodes)) as nodes2, toIntegerList(collect(communities)) as communities2
+                                    WITH apoc.map.fromLists(nodes2, communities2) as output
+                                    WITH output, toIntegerList(keys(output)) as key_string_list
+                                    MATCH (a:Author) WHERE id(a) IN key_string_list
+                                    WITH apoc.create.vNode(['vAuthor'], {name: a.name, id: id(a), community: output[toString(id(a))]}) as prenewNodes
+                                    WITH apoc.map.groupBy(collect(prenewNodes),'name') as newNodes
+                                    MATCH (:Author {name: '${searchname}'})-[:WROTE]-(paper)
+                                    MATCH (a :Author)-[:WROTE]-(paper)-[:WROTE]-(b:Author) WHERE  a.name > b.name AND a.name IN keys(newNodes) AND b.name IN keys(newNodes)
+                                    WITH a, b, count(paper) as weight, newNodes WHERE weight >= ${collabweight}
+                                    RETURN newNodes[a.name], newNodes[b.name], apoc.create.vRelationship(newNodes[a.name], 'CO_AUTH', {Collaborations: toInteger(weight)}, newNodes[b.name]);`)
+
 
                 case "funding_net":
                     return  (       `MATCH (:Investigator {name: '${searchname}'})-[:LED]-(:Project)-[:SUPPORTED]-(p)
@@ -84,11 +108,11 @@ const CypherLabels = (view) => {
     switch (view) {
         case "collaboration_net":
             return ({
-                    "Author": {
+                    "vAuthor": {
                         caption: "name",
                         size: "auth_pagerank",
-                        community: "auth_community",
-                        title_properties: ["name", "auth_pagerank", "auth_community"],
+                        community: "community",
+                        title_properties: ["name", "auth_pagerank", "auth_community", "auth_community_disp"],
                         font: {
                             color: "blue",
                             size: 11,
