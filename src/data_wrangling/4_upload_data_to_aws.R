@@ -2,7 +2,7 @@
 
 source_dir <- paste0(root.data.directory, "import/")
 filenames  <- list.files(source_dir)
-filepaths  <-  
+
 
   filepaths <- paste0(source_dir, filenames) %>%
                 base::file.info() %>%

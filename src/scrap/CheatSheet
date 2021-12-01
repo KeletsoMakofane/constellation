@@ -4,7 +4,7 @@
 
 #### AHEM DATABASE
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@54.162.111.126:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@graph.constellationsproject.app
+    ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@graph.constellationsproject.app
 sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/
 cd ~/
@@ -35,6 +35,9 @@ sudo systemctl restart neo4j
 sudo systemctl status neo4j
 
 #### COPY PASTE Plugin
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" "ubuntu@54.221.24.212:~/article_data.txt" "/Users/keletsomakofane/Downloads/"
+
+
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  "/Users/keletsomakofane/Downloads/neo4j-graph-data-science-1.7.1.jar" "ubuntu@54.221.24.212:~/"
 ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@54.221.24.212
 sudo cp -r ~/neo4j-graph-data-science-1.7.1.jar /var/lib/neo4j/plugins

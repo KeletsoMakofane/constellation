@@ -295,9 +295,7 @@ write_auth_community <- "
     );
 "
 
-sys::exec_wait()
 
-ssh::ssh_exec_wait(session, command = c(start_cyphershell))
 
 ssh::ssh_exec_wait(session, command = c(
   start_cyphershell,
