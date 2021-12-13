@@ -297,31 +297,6 @@ write_auth_community <- "
 
 
 
-ssh::ssh_exec_wait(session, command = c(
-  start_cyphershell,
-  nodes_papers_1,
-  nodes_papers_2,
-  nodes_papers_3,
-  nodes_papers_4,
-  nodes_authors,
-  nodes_projects,
-  nodes_organizations,
-  nodes_investigators,
-  edges_author_paper,
-  edges_investigator_project,
-  edges_organization_project,
-  edges_project_paper_edges,
-  edges_project_subproject,
-  edges_citation,
-  racism_index,
-  covid_index,
-  racism_covid_index,
-  create_auth_citation_net,
-  write_auth_articlerank,
-  create_auth_collab_net,
-  write_auth_community,
-  ':exit'
-))
 
 
 try({neo4j_query(con = neo4j_local, qry = indexes , shell_path = cypher_path)})

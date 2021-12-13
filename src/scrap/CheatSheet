@@ -1,3 +1,16 @@
+
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/data_wrangling/999_auto_update_data.R" "ubuntu@graph.constellationsproject.app:~/auto_update_pubmed"
+
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@graph.constellationsproject.app
+
+
+crontab -l > mycron
+#echo new cron into cron file
+echo "40 17 * * * /usr/bin/Rscript ~/auto_update_pubmed/999_auto_update_data.R" >> mycron
+#install new cron file
+crontab mycron
+rm mycron
+
 ##################################################################################
 ## 1 COPY FILES TO IMPORT FOLDER 
 ##################################################################################
@@ -17,6 +30,7 @@ scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/U
 
 #### UPLOAD DATA to AWS
 scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"  -r "/Users/keletsomakofane/Documents/_data/constellations/import/" "ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com:~/"
+
 ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@ec2-54-234-217-50.compute-1.amazonaws.com
 sudo rm -r /var/lib/neo4j/import
 sudo cp -r ~/import /var/lib/neo4j/
@@ -28,9 +42,11 @@ scp -r "kem073@rce.hmdc.harvard.edu:~/shared_space/thesis_kem073/_gitrepos/Pubme
 
 
 #### COPY PASTE CONFIGURATION
-scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/database_config/neo4j.template" "ubuntu@graph.constellationsproject.app:~/"
-ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@graph.constellationsproject.app
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/database_config/neo4j.template" "ubuntu@data.constellationsproject.app:~/"
+scp -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem"   "/Users/keletsomakofane/Documents/_gitrepos/constellations/src/database_config/apoc.conf" "ubuntu@data.constellationsproject.app:~/"
+ssh -i "/Users/keletsomakofane/Documents/_security/neo4j-aws-newkey.pem" ubuntu@data.constellationsproject.app
 sudo cp ~/neo4j.template /etc/neo4j
+sudo cp ~/apoc.conf /etc/neo4j
 sudo systemctl restart neo4j
 sudo systemctl status neo4j
 

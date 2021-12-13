@@ -65,7 +65,7 @@ dbms.default_listen_address=0.0.0.0
 # The address at which this server can be reached by its clients. This may be the server's IP address or DNS name, or
 # it may be the address of a reverse proxy which sits in front of the server. This setting may be overridden for
 # individual connectors below.
-dbms.default_advertised_address=graph.keletsomakofane.com
+dbms.default_advertised_address=graph.constellationsproject.app
 
 # You can also choose a specific advertised hostname or IP address, and
 # configure an advertised port for each connector, by setting their
@@ -74,7 +74,7 @@ dbms.default_advertised_address=graph.keletsomakofane.com
 # Bolt connector
 dbms.connector.bolt.enabled=true
 dbms.connector.bolt.tls_level=REQUIRED
-dbms.connector.bolt.advertised_address=graph.keletsomakofane.com:7687
+dbms.connector.bolt.advertised_address=graph.constellationsproject.app:7687
 dbms.ssl.policy.bolt.base_directory=/var/lib/neo4j/certificates/bolt
 dbms.ssl.policy.bolt.client_auth=NONE
 dbms.ssl.policy.bolt.trust_all=$dbms_ssl_policy_bolt_trust_all
@@ -86,7 +86,7 @@ dbms.connector.http.listen_address=$dbms_connector_http_listen_address
 
 # HTTPS Connector. There can be zero or one HTTPS connectors.
 dbms.connector.https.enabled=true
-dbms.connector.https.advertised_address=graph.keletsomakofane.com:7473
+dbms.connector.https.advertised_address=graph.constellationsproject.app:7473
 dbms.connector.https.listen_address=0.0.0.0:7473
 dbms.ssl.policy.https.base_directory=/var/lib/neo4j/certificates/https
 dbms.ssl.policy.https.client_auth=NONE
