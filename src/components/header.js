@@ -103,7 +103,7 @@ const Header = (props) => {
                             <input type="number" style = {{width: '70px'}} value = {stop} onChange = {stopChange}/>
                         &emsp; &emsp;
 
-                        Author/Title Search:  &emsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
+                        Pubmed Search:  &emsp; <select  name="on" id = "on" value = {topic} onChange = {topicChange}>
                                                     <option value="all" >All</option>
                                                     <option value="racism" >Racism</option>
                                                     <option value="covid">COVID</option>

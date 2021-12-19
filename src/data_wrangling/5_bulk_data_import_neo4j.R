@@ -75,6 +75,14 @@ indexes <- '
             CREATE INDEX racism_covid_index IF NOT EXISTS
             FOR (p:Paper)
             ON (p.racism_covid);
+
+            CREATE INDEX references_index IF NOT EXISTS
+            FOR (p:Paper)
+            ON (p.references);
+
+            CREATE INDEX projects_index IF NOT EXISTS
+            FOR (p:Paper)
+            ON (p.projects);
             
             
             CREATE FULLTEXT INDEX NameFulltextIndex IF NOT EXISTS
